@@ -846,32 +846,32 @@ header.page-header {
     </table>
   </div>
 
-  <!-- SPPU 10-Point Grade Scale Reference Table -->
+  <!-- AIT Pune Autonomous 10-Point Grade Scale Reference Table (Table 2) -->
   <div class="reference-card" style="margin-top: 20px;">
-    <span class="eyebrow"><span class="eyebrow-dot"></span> Official SPPU 10-Point Scale</span>
-    <h3>Marks-to-Grade Point Pipeline</h3>
+    <span class="eyebrow"><span class="eyebrow-dot"></span> AIT Pune Autonomous (2025–26 Onwards)</span>
+    <h3>Official Grade Points Scale (Table 2)</h3>
     <table class="clean-table">
       <thead>
         <tr>
-          <th>Percentage Range</th>
-          <th>Letter Grade</th>
-          <th>Grade Point ($G_i$)</th>
+          <th>Subject Marks / %</th>
+          <th>Grade</th>
+          <th>Grade Point (G<sub>i</sub>)</th>
           <th>Performance</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td><strong>80% – 100%</strong></td><td><strong style="color:var(--color-deep-teal);">O</strong></td><td><strong>10</strong></td><td>Outstanding</td></tr>
-        <tr><td><strong>70% – 79.99%</strong></td><td><strong style="color:var(--color-lake-teal);">A+</strong></td><td><strong>9</strong></td><td>Excellent</td></tr>
-        <tr><td><strong>60% – 69.99%</strong></td><td><strong style="color:var(--color-pine-shadow);">A</strong></td><td><strong>8</strong></td><td>Very Good</td></tr>
-        <tr><td><strong>55% – 59.99%</strong></td><td><strong style="color:var(--color-sage);">B+</strong></td><td><strong>7</strong></td><td>Good</td></tr>
-        <tr><td><strong>50% – 54.99%</strong></td><td><strong>B</strong></td><td><strong>6</strong></td><td>Above Average</td></tr>
-        <tr><td><strong>45% – 49.99%</strong></td><td><strong>C</strong></td><td><strong>5</strong></td><td>Average</td></tr>
-        <tr><td><strong>40% – 44.99%</strong></td><td><strong>P</strong></td><td><strong>4</strong></td><td>Pass</td></tr>
+        <tr><td><strong>90 – 100%</strong></td><td><strong style="color:var(--color-deep-teal);">O</strong></td><td><strong>10</strong></td><td>Outstanding</td></tr>
+        <tr><td><strong>80 – 89.99%</strong></td><td><strong style="color:var(--color-lake-teal);">A+</strong></td><td><strong>9</strong></td><td>Excellent</td></tr>
+        <tr><td><strong>70 – 79.99%</strong></td><td><strong style="color:var(--color-pine-shadow);">A</strong></td><td><strong>8</strong></td><td>Very Good</td></tr>
+        <tr><td><strong>60 – 69.99%</strong></td><td><strong style="color:var(--color-sage);">B+</strong></td><td><strong>7</strong></td><td>Good</td></tr>
+        <tr><td><strong>50 – 59.99%</strong></td><td><strong>B</strong></td><td><strong>6</strong></td><td>Above Average</td></tr>
+        <tr><td><strong>45 – 49.99%</strong></td><td><strong>C</strong></td><td><strong>5</strong></td><td>Average</td></tr>
+        <tr><td><strong>40 – 44.99%</strong></td><td><strong>P</strong></td><td><strong>4</strong></td><td>Pass</td></tr>
         <tr><td><strong>Below 40%</strong></td><td><strong style="color:#c53030;">F</strong></td><td><strong>0</strong></td><td>Fail</td></tr>
       </tbody>
     </table>
     <p style="font-size: 12px; color: var(--color-slate); margin-top: 10px;">
-      Formula: $\text{SGPA} = \frac{\sum (\text{credits}_i \times G_i)}{\sum \text{credits}_i}$. In 4-credit courses, theory is weighted 3 credits and practical is weighted 1 credit.
+      Formula: <strong>SGPA = &Sigma;(C<sub>i</sub> &times; G<sub>i</sub>) / &Sigma;C<sub>i</sub></strong> (Source: AIT Pune B.Tech Autonomous Examination Rules, Table 2). Total Semester 1 Credits = 22, Total Marks = 700.
     </p>
   </div>
 
@@ -881,13 +881,13 @@ header.page-header {
 <div class="toast" id="toast">Marks updated</div>
 
 <script>
-// Official SPPU 10-Point Grade Point Mapping
+// Official AIT Pune Autonomous Table 2 (2025–26 Onwards)
 function getGradePoint(percentage) {
   if (isNaN(percentage) || percentage === null) return 0;
-  if (percentage >= 80) return 10;
-  if (percentage >= 70) return 9;
-  if (percentage >= 60) return 8;
-  if (percentage >= 55) return 7;
+  if (percentage >= 90) return 10;
+  if (percentage >= 80) return 9;
+  if (percentage >= 70) return 8;
+  if (percentage >= 60) return 7;
   if (percentage >= 50) return 6;
   if (percentage >= 45) return 5;
   if (percentage >= 40) return 4;
@@ -912,7 +912,7 @@ function showToast(text) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// Core Calculation Logic (Official SPPU 4-Step Pipeline)
+// Core Calculation Logic (Official AIT Pune Autonomous Pipeline)
 function calculate() {
   const cards = document.querySelectorAll('.subject-card');
 
@@ -978,19 +978,19 @@ function calculate() {
       totalMarksScored += marksObtained;
       totalMarksEvaluated += maxMarks;
 
-      // 1. Normalize to subject percentage
+      // 1. Normalize to subject percentage (evaluated out of completed fields)
       subjectPct = (marksObtained / maxMarks) * 100;
 
-      // 2. Map to SPPU Grade Point
+      // 2. Map to AIT Pune Autonomous Grade Point (Table 2)
       gradePoint = getGradePoint(subjectPct);
 
-      // 3. Weight by subject credits to get Credit Points
+      // 3. Weight by subject credits to get Credit Points (C_i * G_i)
       const creditPoints = credits * gradePoint;
       totalCreditPoints += creditPoints;
       evaluatedCredits += credits;
     }
 
-    // Update Subject UI
+    // Update Subject UI (Pure % and marks only, no individual GP clutter)
     const pctEl = document.getElementById(`${code}-pct`);
     if (pctEl) {
       pctEl.textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
@@ -1012,30 +1012,31 @@ function calculate() {
       const fEl = document.getElementById(`${code}-fields-sub`);
       if (fEl) {
         fEl.textContent = filledCount > 0 
-          ? `${filledCount}/5 fields (Grade: ${getGradeLetter(gradePoint)} · ${gradePoint} GP)`
-          : '0 / 5 fields';
+          ? `${filledCount} / 5 logged`
+          : '0 / 5 logged';
       }
     } else {
       const subScoreEl = document.getElementById(`${code}-sub-score`);
       if (subScoreEl) {
         subScoreEl.textContent = filledCount > 0 
-          ? `${marksObtained} / ${maxMarks} → Grade: ${getGradeLetter(gradePoint)} (${gradePoint} GP)` 
+          ? `${marksObtained} / ${maxMarks} marks` 
           : '0 / 0';
       }
       const fEl = document.getElementById(`${code}-fields-sub`);
       if (fEl) {
-        fEl.textContent = `${filledCount} / ${inputs.length} fields`;
+        fEl.textContent = `${filledCount} / ${inputs.length} logged`;
       }
     }
   });
 
-  // Calculate Final SGPA
+  // Calculate Final SGPA: Σ(C_i * G_i) / ΣC_i
   const semSGPA = evaluatedCredits > 0 ? (totalCreditPoints / evaluatedCredits) : 0;
+  const exactSGPAStr = evaluatedCredits > 0 ? (totalCreditPoints / evaluatedCredits).toFixed(4) : '0';
 
   // Update Top Dashboard
-  document.getElementById('sgpaDisplay').textContent = semSGPA.toFixed(2);
+  document.getElementById('sgpaDisplay').textContent = evaluatedCredits > 0 ? semSGPA.toFixed(2) : '--';
   document.getElementById('evaluatedCreditsText').textContent = evaluatedCredits > 0
-    ? `${totalCreditPoints} Credit Points · ${evaluatedCredits} / ${totalSemCredits} Credits`
+    ? `${totalCreditPoints} Credit Points ÷ ${evaluatedCredits} Credits (Exact: ${exactSGPAStr})`
     : `0 / ${totalSemCredits} Credits Evaluated`;
 
   const overallPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
@@ -1089,20 +1090,20 @@ function resetCalculator() {
 // Load realistic sample
 function fillSample() {
   const demo = [
-    // Maths: CIE1=18, CIE2=19, CIE3=9, EndSem=38, Practical=21 (105/125 = 84% -> 10 GP)
-    '18', '19', '9', '38', '21',
-    // PST: CIE1=16, CIE2=17, CIE3=7, EndSem=34, Practical=19 (93/125 = 74.4% -> 9 GP)
-    '16', '17', '7', '34', '19',
-    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=40, Practical=22 (106/125 = 84.8% -> 10 GP)
-    '18', '17', '9', '40', '22',
-    // BMAC: CIE1=14, CIE2=15, CIE3=7, EndSem=31, Practical=18 (85/125 = 68% -> 8 GP)
-    '14', '15', '7', '31', '18',
-    // IKS: CIE1=17, CIE2=18, CIE3=8 (43/50 = 86% -> 10 GP)
-    '17', '18', '8',
-    // DTI: PPT1=8, PPT2=8, Quiz=8, Project=15, Practical=19 (58/75 = 77.3% -> 9 GP)
-    '8', '8', '8', '15', '19',
-    // CHSV: CIE1=15, CIE2=14, CIE3=7, Homework=18 (54/75 = 72% -> 9 GP)
-    '15', '14', '7', '18'
+    // Maths: CIE1=19, CIE2=19, CIE3=9, EndSem=45, Practical=23 (115/125 = 92.0% -> 10 GP, 40 CP)
+    '19', '19', '9', '45', '23',
+    // PST: CIE1=17, CIE2=17, CIE3=8, EndSem=42, Practical=21 (105/125 = 84.0% -> 9 GP, 36 CP)
+    '17', '17', '8', '42', '21',
+    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=43, Practical=22 (109/125 = 87.2% -> 9 GP, 36 CP)
+    '18', '17', '9', '43', '22',
+    // BMAC: CIE1=15, CIE2=15, CIE3=7, EndSem=37, Practical=19 (93/125 = 74.4% -> 8 GP, 32 CP)
+    '15', '15', '7', '37', '19',
+    // IKS: CIE1=18, CIE2=19, CIE3=9 (46/50 = 92.0% -> 10 GP, 20 CP)
+    '18', '19', '9',
+    // DTI: PPT1=9, PPT2=9, Quiz=8, Project=18, Practical=22 (66/75 = 88.0% -> 9 GP, 18 CP)
+    '9', '9', '8', '18', '22',
+    // CHSV: CIE1=17, CIE2=16, CIE3=8, Homework=22 (63/75 = 84.0% -> 9 GP, 18 CP)
+    '17', '16', '8', '22'
   ];
 
   const inputs = document.querySelectorAll('.m-input');
@@ -1110,7 +1111,7 @@ function fillSample() {
     input.value = demo[i] || '';
   });
   calculate();
-  showToast('Sample marks loaded');
+  showToast('Official sample marks loaded');
 }
 
 // Initialize and attach non-wheel listeners

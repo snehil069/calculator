@@ -71,19 +71,30 @@ A modern, aesthetic, component-aware SGPA calculator designed specifically for *
 
 ---
 
-## 📈 Grading Scale
+## 📈 Official AIT Pune Autonomous Grading Scale (Table 2)
 
-Standard 10-Point UGC / Autonomous University Scale:
+According to the official **AIT Pune Autonomous Examination Regulations (2025–26 Onwards)**:
 
-| Percentage Range | Grade | Grade Point | Performance Description |
+$$\text{SGPA} = \frac{\sum (C_i \times G_i)}{\sum C_i}$$
+
+Where:
+- $C_i$ = Credits assigned to subject $i$
+- $G_i$ = Grade points earned in subject $i$
+- $\sum (C_i \times G_i)$ = Total Credit Points earned
+- $\sum C_i$ = Total evaluated credits (Total semester credits = 22)
+
+### Table 2: Grade Points Table
+
+| Total Subject Marks / % | Letter Grade | Grade Point ($G_i$) | Performance Description |
 | :---: | :---: | :---: | :--- |
-| **90% – 100%** | **O** | **10.0** | Outstanding |
-| **80% – 89.9%** | **A+** | **9.0** | Excellent |
-| **70% – 79.9%** | **A** | **8.0** | Very Good |
-| **60% – 69.9%** | **B+** | **7.0** | Good |
-| **50% – 59.9%** | **B** | **6.0** | Above Average |
-| **40% – 49.9%** | **C / P** | **5.0** | Pass |
-| **Below 40%** | **F** | **0.0** | Fail |
+| **90% – 100%** | **O** | **10** | Outstanding |
+| **80% – 89.99%** | **A+** | **9** | Excellent |
+| **70% – 79.99%** | **A** | **8** | Very Good |
+| **60% – 69.99%** | **B+** | **7** | Good |
+| **50% – 59.99%** | **B** | **6** | Above Average |
+| **45% – 49.99%** | **C** | **5** | Average |
+| **40% – 44.99%** | **P** | **4** | Pass |
+| **Below 40%** | **F** | **0** | Fail |
 
 ---
 
