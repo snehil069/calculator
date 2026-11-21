@@ -313,7 +313,64 @@ header.page-header {
   display: inline-block;
 }
 
-/* ONLY PERCENTAGE in individual subjects (NO GP) */
+/* Grade Status Pill */
+.grade-pill {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: var(--color-paper-white);
+  color: var(--color-deep-teal);
+  border: 1px solid var(--border-hairline);
+  display: inline-block;
+}
+
+.grade-pill.complete {
+  background-color: #e6f4ea;
+  color: #137333;
+  border-color: #ceead6;
+}
+
+.grade-pill.fail {
+  background-color: #fce8e6;
+  color: #c5221f;
+  border-color: #fad2cf;
+}
+
+/* Calculation Mode Toggle */
+.mode-toggle-group {
+  display: inline-flex;
+  background-color: var(--color-paper-white);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-buttons);
+  padding: 2px;
+  gap: 2px;
+}
+
+.btn-toggle {
+  border: none;
+  background: transparent;
+  color: var(--color-slate);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-buttons);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle:hover {
+  color: var(--color-charcoal-navy);
+}
+
+.btn-toggle.active {
+  background-color: var(--color-deep-teal);
+  color: #ffffff;
+}
+
+/* Subject Score & Status Area */
 .subject-percentage-area {
   text-align: right;
   display: flex;
@@ -492,24 +549,24 @@ header.page-header {
   <!-- Clean Minimalist Dashboard -->
   <div class="summary-card">
     <div class="summary-score-col">
-      <span class="eyebrow">Semester SGPA</span>
-      <div class="sgpa-big-number" id="sgpaDisplay">0.00</div>
+      <span class="eyebrow" id="sgpaEyebrow"><span class="eyebrow-dot"></span> Semester SGPA</span>
+      <div class="sgpa-big-number" id="sgpaDisplay">--</div>
       <div class="sgpa-caption" id="evaluatedCreditsText">0 / 22 Credits Evaluated</div>
     </div>
     <div class="summary-details-grid">
       <div class="metric-item">
-        <span class="metric-label">Evaluated Percentage</span>
-        <span class="metric-value" id="overallPctDisplay">0.0%</span>
-        <span class="metric-sub">Average across included</span>
+        <span class="metric-label">Semester Percentage</span>
+        <span class="metric-value" id="overallPctDisplay">--%</span>
+        <span class="metric-sub" id="overallPctSub">Average across evaluated</span>
       </div>
       <div class="metric-item">
-        <span class="metric-label">Evaluated Marks</span>
-        <span class="metric-value" id="evaluatedMarksDisplay">0 / 0</span>
-        <span class="metric-sub" id="termTotalMarksSub">out of 700 total marks</span>
+        <span class="metric-label">Total Marks Scored</span>
+        <span class="metric-value" id="evaluatedMarksDisplay">0 / 700</span>
+        <span class="metric-sub" id="termTotalMarksSub">out of 700 maximum marks</span>
       </div>
       <div class="metric-item">
-        <span class="metric-label">Active Courses</span>
-        <span class="metric-value" id="activeCoursesDisplay">0 / 7</span>
+        <span class="metric-label">Assessment Progress</span>
+        <span class="metric-value" id="activeCoursesDisplay">0 / 7 Courses</span>
         <span class="metric-sub" id="fieldsDoneSub">0 of 27 fields logged</span>
       </div>
     </div>
@@ -517,8 +574,14 @@ header.page-header {
 
   <!-- 4-Credit Engineering Courses -->
   <div class="section-label-bar">
-    <h2>4-Credit Courses</h2>
-    <span>100 Theory + 25 Practical = 125 Marks each</span>
+    <div>
+      <h2>4-Credit Courses</h2>
+      <span style="font-size:12px; color:var(--color-slate);">Theory 100 (3 Credits) + Practical 25 (1 Credit) = 125 Marks each</span>
+    </div>
+    <div class="mode-toggle-group">
+      <button type="button" class="btn-toggle active" id="btnModeSplit" onclick="setCalculationMode('split')" title="3 Credits Theory + 1 Credit Practical (Official Autonomous Standard)">3+1 Component Weighting</button>
+      <button type="button" class="btn-toggle" id="btnModeCombined" onclick="setCalculationMode('combined')" title="Aggregate 125 Marks Unified">Combined 125M</button>
+    </div>
   </div>
 
   <div class="subjects-list">
@@ -528,11 +591,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>Engineering Mathematics</h3>
-          <span class="credit-tag">4 Credits</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">4 Credits (3 Th + 1 Pr)</span>
+            <span class="grade-pill" id="maths-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="maths-pct">--%</div>
-          <div class="subject-score-raw" id="maths-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="maths-raw">0 / 125 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -558,11 +624,11 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Theory: <strong id="maths-theory-sub">--</strong></span>
+        <span>Theory (3 Cr): <strong id="maths-theory-sub">--</strong></span>
         <span>·</span>
-        <span>Practical: <strong id="maths-practical-sub">--</strong></span>
+        <span>Practical (1 Cr): <strong id="maths-practical-sub">--</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="maths-fields-sub">0 / 5</strong></span>
+        <span>Status: <strong id="maths-fields-sub">0 / 5 logged</strong></span>
       </div>
     </div>
 
@@ -571,11 +637,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>PST (Problem Solving Techniques)</h3>
-          <span class="credit-tag">4 Credits</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">4 Credits (3 Th + 1 Pr)</span>
+            <span class="grade-pill" id="pst-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="pst-pct">--%</div>
-          <div class="subject-score-raw" id="pst-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="pst-raw">0 / 125 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -601,11 +670,11 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Theory: <strong id="pst-theory-sub">--</strong></span>
+        <span>Theory (3 Cr): <strong id="pst-theory-sub">--</strong></span>
         <span>·</span>
-        <span>Practical: <strong id="pst-practical-sub">--</strong></span>
+        <span>Practical (1 Cr): <strong id="pst-practical-sub">--</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="pst-fields-sub">0 / 5</strong></span>
+        <span>Status: <strong id="pst-fields-sub">0 / 5 logged</strong></span>
       </div>
     </div>
 
@@ -614,11 +683,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>Applied Science (Chemistry)</h3>
-          <span class="credit-tag">4 Credits</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">4 Credits (3 Th + 1 Pr)</span>
+            <span class="grade-pill" id="chem-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="chem-pct">--%</div>
-          <div class="subject-score-raw" id="chem-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="chem-raw">0 / 125 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -644,11 +716,11 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Theory: <strong id="chem-theory-sub">--</strong></span>
+        <span>Theory (3 Cr): <strong id="chem-theory-sub">--</strong></span>
         <span>·</span>
-        <span>Practical: <strong id="chem-practical-sub">--</strong></span>
+        <span>Practical (1 Cr): <strong id="chem-practical-sub">--</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="chem-fields-sub">0 / 5</strong></span>
+        <span>Status: <strong id="chem-fields-sub">0 / 5 logged</strong></span>
       </div>
     </div>
 
@@ -657,11 +729,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>BMAC (Basics of Mechanical & Civil)</h3>
-          <span class="credit-tag">4 Credits</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">4 Credits (3 Th + 1 Pr)</span>
+            <span class="grade-pill" id="bmac-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="bmac-pct">--%</div>
-          <div class="subject-score-raw" id="bmac-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="bmac-raw">0 / 125 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -687,11 +762,11 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Theory: <strong id="bmac-theory-sub">--</strong></span>
+        <span>Theory (3 Cr): <strong id="bmac-theory-sub">--</strong></span>
         <span>·</span>
-        <span>Practical: <strong id="bmac-practical-sub">--</strong></span>
+        <span>Practical (1 Cr): <strong id="bmac-practical-sub">--</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="bmac-fields-sub">0 / 5</strong></span>
+        <span>Status: <strong id="bmac-fields-sub">0 / 5 logged</strong></span>
       </div>
     </div>
 
@@ -700,7 +775,7 @@ header.page-header {
   <!-- 2-Credit Courses -->
   <div class="section-label-bar">
     <h2>2-Credit Courses</h2>
-    <span>Value-Added, Skill & Humanity Courses</span>
+    <span>Value-Added, Skill & Humanity Courses (Continuous Assessment)</span>
   </div>
 
   <div class="subjects-list">
@@ -710,11 +785,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>IKS (Indian Knowledge Systems)</h3>
-          <span class="credit-tag">2 Credits · 50 Marks</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">2 Credits · 50 Marks</span>
+            <span class="grade-pill" id="iks-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="iks-pct">--%</div>
-          <div class="subject-score-raw" id="iks-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="iks-raw">0 / 50 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -732,9 +810,9 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Evaluated Score: <strong id="iks-sub-score">0 / 0</strong></span>
+        <span>Evaluation: <strong id="iks-sub-score">0 / 50 marks</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="iks-fields-sub">0 / 3</strong></span>
+        <span>Status: <strong id="iks-fields-sub">0 / 3 logged</strong></span>
       </div>
     </div>
 
@@ -743,11 +821,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>DTI (Design Thinking & Innovation)</h3>
-          <span class="credit-tag">2 Credits · 75 Marks</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">2 Credits · 75 Marks</span>
+            <span class="grade-pill" id="dti-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="dti-pct">--%</div>
-          <div class="subject-score-raw" id="dti-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="dti-raw">0 / 75 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -773,9 +854,9 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Evaluated Score: <strong id="dti-sub-score">0 / 0</strong></span>
+        <span>Evaluation: <strong id="dti-sub-score">0 / 75 marks</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="dti-fields-sub">0 / 5</strong></span>
+        <span>Status: <strong id="dti-fields-sub">0 / 5 logged</strong></span>
       </div>
     </div>
 
@@ -784,11 +865,14 @@ header.page-header {
       <div class="subject-header-row">
         <div class="subject-title-area">
           <h3>CHSV (Ethics & Human Values)</h3>
-          <span class="credit-tag">2 Credits · 75 Marks</span>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span class="credit-tag">2 Credits · 75 Marks</span>
+            <span class="grade-pill" id="chsv-grade-pill">Grade: -- · -- GP</span>
+          </div>
         </div>
         <div class="subject-percentage-area">
           <div class="subject-pct-big" id="chsv-pct">--%</div>
-          <div class="subject-score-raw" id="chsv-raw">0 / 0 marks</div>
+          <div class="subject-score-raw" id="chsv-raw">0 / 75 marks · 0 CP</div>
         </div>
       </div>
       <div class="inputs-grid">
@@ -810,9 +894,9 @@ header.page-header {
         </div>
       </div>
       <div class="subject-footer-breakdown">
-        <span>Evaluated Score: <strong id="chsv-sub-score">0 / 0</strong></span>
+        <span>Evaluation: <strong id="chsv-sub-score">0 / 75 marks</strong></span>
         <span>·</span>
-        <span>Components logged: <strong id="chsv-fields-sub">0 / 4</strong></span>
+        <span>Status: <strong id="chsv-fields-sub">0 / 4 logged</strong></span>
       </div>
     </div>
 
@@ -881,9 +965,23 @@ header.page-header {
 <div class="toast" id="toast">Marks updated</div>
 
 <script>
+// Calculation Mode: 'split' = 3 Theory + 1 Practical Weighting (Official), 'combined' = Combined 125M Unified
+let calculationMode = 'split';
+
+function setCalculationMode(mode) {
+  calculationMode = mode;
+  const btnSplit = document.getElementById('btnModeSplit');
+  const btnCombined = document.getElementById('btnModeCombined');
+  if (btnSplit) btnSplit.classList.toggle('active', mode === 'split');
+  if (btnCombined) btnCombined.classList.toggle('active', mode === 'combined');
+  localStorage.setItem('ait_calc_mode', mode);
+  calculate();
+  showToast(mode === 'split' ? 'Mode: 3 Theory + 1 Practical Component Weighting' : 'Mode: Combined 125 Marks Unified');
+}
+
 // Official AIT Pune Autonomous Table 2 (2025–26 Onwards)
 function getGradePoint(percentage) {
-  if (isNaN(percentage) || percentage === null) return 0;
+  if (isNaN(percentage) || percentage === null || percentage < 40) return 0;
   if (percentage >= 90) return 10;
   if (percentage >= 80) return 9;
   if (percentage >= 70) return 8;
@@ -916,31 +1014,37 @@ function showToast(text) {
 function calculate() {
   const cards = document.querySelectorAll('.subject-card');
 
-  let totalCreditPoints = 0;
-  let evaluatedCredits = 0;
+  let grandTotalScored = 0;
+  let grandTotalMaxEvaluated = 0;
+  const grandTotalSemMarks = 700;
   const totalSemCredits = 22;
 
-  let totalMarksScored = 0;
-  let totalMarksEvaluated = 0;
+  let totalCreditPoints = 0;
+  let evaluatedCreditsCount = 0;
+  let completedCoursesCount = 0;
+  let activeCoursesCount = 0;
 
-  let activeCourses = 0;
   let totalFieldsFilled = 0;
-  let totalFieldsCount = 0;
+  const totalFieldsCount = 27;
 
   cards.forEach(card => {
     const code = card.dataset.code;
-    const credits = parseFloat(card.dataset.credits) || 0;
+    const type = card.dataset.type; // 'four' or 'two'
+    const courseCredits = parseFloat(card.dataset.credits) || (type === 'four' ? 4 : 2);
     const inputs = Array.from(card.querySelectorAll('.m-input'));
-    totalFieldsCount += inputs.length;
 
-    let marksObtained = 0;
-    let maxMarks = 0;
-    let filledCount = 0;
+    let subjectScored = 0;
+    let subjectMax = 0;
+    let subjectTotalMaxPossible = type === 'four' ? 125 : (code === 'iks' ? 50 : 75);
+    let subjectFilledCount = 0;
 
     let theoryScored = 0;
-    let theoryMax = 0;
+    let theoryMaxEvaluated = 0;
+    let theoryCieScored = 0;
+    let theoryEseScored = null;
+
     let practicalScored = 0;
-    let practicalMax = 0;
+    let practicalMaxEvaluated = 0;
 
     inputs.forEach(input => {
       const max = parseFloat(input.dataset.max) || 0;
@@ -948,21 +1052,28 @@ function calculate() {
       const raw = input.value.trim();
 
       if (raw !== '') {
-        const val = parseFloat(raw);
+        let val = parseFloat(raw);
         if (!isNaN(val)) {
-          filledCount++;
+          // Strictly clamp entered marks between 0 and assessment max
+          val = Math.min(Math.max(0, val), max);
+          subjectFilledCount++;
           totalFieldsFilled++;
           input.classList.add('has-val');
 
-          marksObtained += val;
-          maxMarks += max;
+          subjectScored += val;
+          subjectMax += max;
 
           if (group === 'theory') {
             theoryScored += val;
-            theoryMax += max;
+            theoryMaxEvaluated += max;
+            if (input.classList.contains('endsem')) {
+              theoryEseScored = val;
+            } else {
+              theoryCieScored += val;
+            }
           } else if (group === 'practical') {
             practicalScored += val;
-            practicalMax += max;
+            practicalMaxEvaluated += max;
           }
         }
       } else {
@@ -970,80 +1081,251 @@ function calculate() {
       }
     });
 
+    const isSubjectComplete = (subjectFilledCount === inputs.length);
+    if (isSubjectComplete) {
+      completedCoursesCount++;
+    }
+    if (subjectFilledCount > 0) {
+      activeCoursesCount++;
+      grandTotalScored += subjectScored;
+      grandTotalMaxEvaluated += subjectMax;
+    }
+
     let subjectPct = 0;
-    let gradePoint = 0;
+    let subjectGP = 0;
+    let subjectGrade = 'F';
+    let subjectCP = 0;
 
-    if (filledCount > 0 && maxMarks > 0) {
-      activeCourses++;
-      totalMarksScored += marksObtained;
-      totalMarksEvaluated += maxMarks;
+    if (type === 'four') {
+      // 4-Credit Course: 100 Theory (3 credits) + 25 Practical (1 credit) = 125 Marks
+      const isTheoryComplete = (theoryMaxEvaluated === 100);
+      const isPracticalComplete = (practicalMaxEvaluated === 25);
 
-      // 1. Normalize to subject percentage (evaluated out of completed fields)
-      subjectPct = (marksObtained / maxMarks) * 100;
+      subjectPct = subjectMax > 0 ? (subjectScored / subjectMax) * 100 : 0;
 
-      // 2. Map to AIT Pune Autonomous Grade Point (Table 2)
-      gradePoint = getGradePoint(subjectPct);
+      if (calculationMode === 'split') {
+        // Official Component Weighting: Theory carries 3 credits, Practical carries 1 credit
+        const thPct = theoryMaxEvaluated > 0 ? (theoryScored / theoryMaxEvaluated) * 100 : 0;
+        const prPct = practicalMaxEvaluated > 0 ? (practicalScored / practicalMaxEvaluated) * 100 : 0;
 
-      // 3. Weight by subject credits to get Credit Points (C_i * G_i)
-      const creditPoints = credits * gradePoint;
-      totalCreditPoints += creditPoints;
-      evaluatedCredits += credits;
-    }
+        let thGP = getGradePoint(thPct);
+        let prGP = getGradePoint(prPct);
 
-    // Update Subject UI (Pure % and marks only, no individual GP clutter)
-    const pctEl = document.getElementById(`${code}-pct`);
-    if (pctEl) {
-      pctEl.textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
-    }
-    const rawEl = document.getElementById(`${code}-raw`);
-    if (rawEl) {
-      rawEl.textContent = filledCount > 0 ? `${marksObtained} / ${maxMarks} marks` : '0 / 0 marks';
-    }
+        // Separate Passing Heads under AIT regulations when components are completely taken:
+        // Theory requires CIE >= 20/50, ESE >= 20/50, total theory >= 40/100
+        if (isTheoryComplete) {
+          if (theoryCieScored < 20 || (theoryEseScored !== null && theoryEseScored < 20) || theoryScored < 40) {
+            thGP = 0;
+          }
+        }
+        // Practical requires >= 10/25 (40%)
+        if (isPracticalComplete) {
+          if (practicalScored < 10) {
+            prGP = 0;
+          }
+        }
 
-    if (card.dataset.type === 'four') {
-      const thEl = document.getElementById(`${code}-theory-sub`);
-      if (thEl) {
-        thEl.textContent = theoryMax > 0 ? `${theoryScored} / ${theoryMax}` : '--';
+        const thGrade = getGradeLetter(thGP);
+        const prGrade = getGradeLetter(prGP);
+
+        const thCP = 3 * thGP;
+        const prCP = 1 * prGP;
+
+        subjectCP = thCP + prCP;
+        subjectGP = subjectCP / 4;
+        subjectGrade = (isTheoryComplete && thGP === 0) || (isPracticalComplete && prGP === 0)
+          ? 'F'
+          : getGradeLetter(subjectGP);
+
+        if (subjectFilledCount > 0) {
+          evaluatedCreditsCount += courseCredits;
+          totalCreditPoints += subjectCP;
+        }
+
+        // Update footer for 4-credit course
+        const thEl = document.getElementById(`${code}-theory-sub`);
+        if (thEl) {
+          thEl.textContent = theoryMaxEvaluated > 0
+            ? `${theoryScored}/100 (${thPct.toFixed(1)}% · ${thGrade} · ${thGP} GP · ${thCP} CP)`
+            : 'Pending';
+        }
+        const prEl = document.getElementById(`${code}-practical-sub`);
+        if (prEl) {
+          prEl.textContent = practicalMaxEvaluated > 0
+            ? `${practicalScored}/25 (${prPct.toFixed(1)}% · ${prGrade} · ${prGP} GP · ${prCP} CP)`
+            : 'Pending';
+        }
+        const fEl = document.getElementById(`${code}-fields-sub`);
+        if (fEl) {
+          fEl.textContent = isSubjectComplete
+            ? `Complete (${subjectCP} CP · 5/5 logged)`
+            : `${subjectFilledCount}/5 logged (In Progress)`;
+        }
+
+      } else {
+        // Combined 125 Marks Unified Mode
+        subjectPct = subjectMax > 0 ? (subjectScored / subjectMax) * 100 : 0;
+        subjectGP = getGradePoint(subjectPct);
+
+        // Passing head check when complete
+        if (isSubjectComplete) {
+          if (theoryCieScored < 20 || (theoryEseScored !== null && theoryEseScored < 20) || practicalScored < 10 || subjectPct < 40) {
+            subjectGP = 0;
+          }
+        }
+        subjectGrade = getGradeLetter(subjectGP);
+        subjectCP = courseCredits * subjectGP;
+
+        if (subjectFilledCount > 0) {
+          evaluatedCreditsCount += courseCredits;
+          totalCreditPoints += subjectCP;
+        }
+
+        const thEl = document.getElementById(`${code}-theory-sub`);
+        if (thEl) {
+          thEl.textContent = theoryMaxEvaluated > 0 ? `${theoryScored}/100` : 'Pending';
+        }
+        const prEl = document.getElementById(`${code}-practical-sub`);
+        if (prEl) {
+          prEl.textContent = practicalMaxEvaluated > 0 ? `${practicalScored}/25` : 'Pending';
+        }
+        const fEl = document.getElementById(`${code}-fields-sub`);
+        if (fEl) {
+          fEl.textContent = isSubjectComplete
+            ? `Complete (${subjectCP} CP · 5/5 logged)`
+            : `${subjectFilledCount}/5 logged (In Progress)`;
+        }
       }
-      const prEl = document.getElementById(`${code}-practical-sub`);
-      if (prEl) {
-        prEl.textContent = practicalMax > 0 ? `${practicalScored} / ${practicalMax}` : '--';
-      }
-      const fEl = document.getElementById(`${code}-fields-sub`);
-      if (fEl) {
-        fEl.textContent = filledCount > 0 
-          ? `${filledCount} / 5 logged`
-          : '0 / 5 logged';
-      }
+
     } else {
+      // 2-Credit Courses (IKS: 50M, DTI: 75M, CHSV: 75M)
+      subjectPct = subjectMax > 0 ? (subjectScored / subjectMax) * 100 : 0;
+      subjectGP = getGradePoint(subjectPct);
+
+      if (isSubjectComplete) {
+        if (code === 'iks' && subjectScored < 20) subjectGP = 0;
+        if (code === 'dti' && (subjectScored < 30 || (practicalMaxEvaluated === 25 && practicalScored < 10))) subjectGP = 0;
+        if (code === 'chsv' && subjectScored < 30) subjectGP = 0;
+      }
+
+      subjectGrade = getGradeLetter(subjectGP);
+      subjectCP = courseCredits * subjectGP;
+
+      if (subjectFilledCount > 0) {
+        evaluatedCreditsCount += courseCredits;
+        totalCreditPoints += subjectCP;
+      }
+
       const subScoreEl = document.getElementById(`${code}-sub-score`);
       if (subScoreEl) {
-        subScoreEl.textContent = filledCount > 0 
-          ? `${marksObtained} / ${maxMarks} marks` 
-          : '0 / 0';
+        subScoreEl.textContent = isSubjectComplete
+          ? `${subjectScored} / ${subjectTotalMaxPossible} marks (${subjectPct.toFixed(1)}%) · ${subjectGrade} (${subjectGP} GP)`
+          : (subjectFilledCount > 0 ? `${subjectScored} / ${subjectMax} logged` : '0 / 0');
       }
       const fEl = document.getElementById(`${code}-fields-sub`);
       if (fEl) {
-        fEl.textContent = `${filledCount} / ${inputs.length} logged`;
+        fEl.textContent = isSubjectComplete
+          ? `Complete (${subjectCP} CP · ${inputs.length}/${inputs.length} logged)`
+          : `${subjectFilledCount}/${inputs.length} logged (In Progress)`;
+      }
+    }
+
+    // Update Header Elements of Subject Card
+    const gradePill = document.getElementById(`${code}-grade-pill`);
+    if (gradePill) {
+      if (isSubjectComplete) {
+        const gpDisplay = (subjectGP % 1 === 0) ? subjectGP : subjectGP.toFixed(2);
+        gradePill.textContent = `Grade: ${subjectGrade} · ${gpDisplay} GP`;
+        gradePill.className = `grade-pill complete ${subjectGrade === 'F' ? 'fail' : ''}`;
+      } else if (subjectFilledCount > 0) {
+        gradePill.textContent = `In Progress (${subjectFilledCount}/${inputs.length})`;
+        gradePill.className = 'grade-pill';
+      } else {
+        gradePill.textContent = 'Grade: -- · -- GP';
+        gradePill.className = 'grade-pill';
+      }
+    }
+
+    const pctEl = document.getElementById(`${code}-pct`);
+    if (pctEl) {
+      pctEl.textContent = subjectFilledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
+    }
+
+    const rawEl = document.getElementById(`${code}-raw`);
+    if (rawEl) {
+      if (isSubjectComplete) {
+        rawEl.textContent = `${subjectScored} / ${subjectTotalMaxPossible} marks · ${subjectCP} CP`;
+      } else if (subjectFilledCount > 0) {
+        rawEl.textContent = `${subjectScored} / ${subjectMax} logged · Provisional`;
+      } else {
+        rawEl.textContent = `0 / ${subjectTotalMaxPossible} marks · 0 CP`;
       }
     }
   });
 
-  // Calculate Final SGPA: Σ(C_i * G_i) / ΣC_i
-  const semSGPA = evaluatedCredits > 0 ? (totalCreditPoints / evaluatedCredits) : 0;
-  const exactSGPAStr = evaluatedCredits > 0 ? (totalCreditPoints / evaluatedCredits).toFixed(4) : '0';
+  // Check Full Marks Completion Requirement (Section 5)
+  const isAllComplete = (totalFieldsFilled === totalFieldsCount);
 
-  // Update Top Dashboard
-  document.getElementById('sgpaDisplay').textContent = evaluatedCredits > 0 ? semSGPA.toFixed(2) : '--';
-  document.getElementById('evaluatedCreditsText').textContent = evaluatedCredits > 0
-    ? `${totalCreditPoints} Credit Points ÷ ${evaluatedCredits} Credits (Exact: ${exactSGPAStr})`
-    : `0 / ${totalSemCredits} Credits Evaluated`;
+  const sgpaDisplay = document.getElementById('sgpaDisplay');
+  const sgpaEyebrow = document.getElementById('sgpaEyebrow');
+  const evaluatedCreditsText = document.getElementById('evaluatedCreditsText');
 
-  const overallPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
-  document.getElementById('overallPctDisplay').textContent = `${overallPct}%`;
-  document.getElementById('evaluatedMarksDisplay').textContent = `${totalMarksScored} / ${totalMarksEvaluated}`;
-  document.getElementById('activeCoursesDisplay').textContent = `${activeCourses} / 7`;
-  document.getElementById('fieldsDoneSub').textContent = `${totalFieldsFilled} of ${totalFieldsCount} fields logged`;
+  const overallPctDisplay = document.getElementById('overallPctDisplay');
+  const overallPctSub = document.getElementById('overallPctSub');
+  const evaluatedMarksDisplay = document.getElementById('evaluatedMarksDisplay');
+  const termTotalMarksSub = document.getElementById('termTotalMarksSub');
+  const activeCoursesDisplay = document.getElementById('activeCoursesDisplay');
+  const fieldsDoneSub = document.getElementById('fieldsDoneSub');
+
+  if (isAllComplete) {
+    // Official Final SGPA (All 7 subjects complete, 22 credits)
+    const finalSGPA = totalCreditPoints / totalSemCredits;
+    const finalPct = (grandTotalScored / grandTotalSemMarks) * 100;
+
+    sgpaDisplay.textContent = finalSGPA.toFixed(2);
+    sgpaEyebrow.innerHTML = '<span class="eyebrow-dot"></span> Official Final SGPA';
+    evaluatedCreditsText.textContent = `${totalCreditPoints} Credit Points ÷ ${totalSemCredits} Credits (Exact: ${finalSGPA.toFixed(4)})`;
+
+    overallPctDisplay.textContent = `${finalPct.toFixed(1)}%`;
+    overallPctSub.textContent = 'Final Semester Percentage';
+
+    evaluatedMarksDisplay.textContent = `${grandTotalScored} / ${grandTotalSemMarks}`;
+    termTotalMarksSub.textContent = 'All 700 marks evaluated';
+
+    activeCoursesDisplay.textContent = '7 / 7 Courses Complete';
+    fieldsDoneSub.textContent = 'All 27 assessments entered (100%)';
+  } else if (totalFieldsFilled > 0) {
+    // Incomplete: Estimated SGPA clearly labeled as provisional
+    const estimatedSGPA = evaluatedCreditsCount > 0 ? (totalCreditPoints / evaluatedCreditsCount) : 0;
+    const currentPct = grandTotalMaxEvaluated > 0 ? (grandTotalScored / grandTotalMaxEvaluated) * 100 : 0;
+
+    sgpaDisplay.textContent = `~${estimatedSGPA.toFixed(2)}`;
+    sgpaEyebrow.innerHTML = '<span class="eyebrow-dot" style="background-color:#d97706;"></span> Estimated SGPA (In Progress)';
+    evaluatedCreditsText.textContent = `Provisional · ${totalFieldsFilled} of 27 fields logged (Final SGPA requires 27/27)`;
+
+    overallPctDisplay.textContent = `${currentPct.toFixed(1)}%`;
+    overallPctSub.textContent = `Average across ${grandTotalMaxEvaluated} logged marks`;
+
+    evaluatedMarksDisplay.textContent = `${grandTotalScored} / 700`;
+    termTotalMarksSub.textContent = `${grandTotalMaxEvaluated} max marks evaluated so far`;
+
+    activeCoursesDisplay.textContent = `${activeCoursesCount} / 7 Courses Active`;
+    fieldsDoneSub.textContent = `${totalFieldsFilled} of 27 fields logged (${completedCoursesCount} complete)`;
+  } else {
+    // Empty state
+    sgpaDisplay.textContent = '--';
+    sgpaEyebrow.innerHTML = '<span class="eyebrow-dot"></span> Semester SGPA';
+    evaluatedCreditsText.textContent = '0 / 22 Credits Evaluated';
+
+    overallPctDisplay.textContent = '--%';
+    overallPctSub.textContent = 'Average across completed';
+
+    evaluatedMarksDisplay.textContent = '0 / 700';
+    termTotalMarksSub.textContent = 'out of 700 maximum marks';
+
+    activeCoursesDisplay.textContent = '0 / 7 Courses';
+    fieldsDoneSub.textContent = '0 of 27 fields logged';
+  }
 
   saveData();
 }
@@ -1058,6 +1340,15 @@ function saveData() {
 }
 
 function loadData() {
+  const savedMode = localStorage.getItem('ait_calc_mode');
+  if (savedMode === 'combined' || savedMode === 'split') {
+    calculationMode = savedMode;
+    const btnSplit = document.getElementById('btnModeSplit');
+    const btnCombined = document.getElementById('btnModeCombined');
+    if (btnSplit) btnSplit.classList.toggle('active', savedMode === 'split');
+    if (btnCombined) btnCombined.classList.toggle('active', savedMode === 'combined');
+  }
+
   const saved = localStorage.getItem('ait_marks_clean');
   if (!saved) {
     calculate();
@@ -1087,22 +1378,22 @@ function resetCalculator() {
   showToast('All marks cleared');
 }
 
-// Load realistic sample
+// Load realistic sample (All 27 fields complete)
 function fillSample() {
   const demo = [
-    // Maths: CIE1=19, CIE2=19, CIE3=9, EndSem=45, Practical=23 (115/125 = 92.0% -> 10 GP, 40 CP)
+    // Maths: CIE1=19, CIE2=19, CIE3=9, EndSem=45, Practical=23 (Theory=92/100 -> 10 GP, 30 CP; Practical=23/25 -> 10 GP, 10 CP -> Total 40 CP)
     '19', '19', '9', '45', '23',
-    // PST: CIE1=17, CIE2=17, CIE3=8, EndSem=42, Practical=21 (105/125 = 84.0% -> 9 GP, 36 CP)
+    // PST: CIE1=17, CIE2=17, CIE3=8, EndSem=42, Practical=21 (Theory=84/100 -> 9 GP, 27 CP; Practical=21/25 -> 9 GP, 9 CP -> Total 36 CP)
     '17', '17', '8', '42', '21',
-    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=43, Practical=22 (109/125 = 87.2% -> 9 GP, 36 CP)
+    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=43, Practical=22 (Theory=87/100 -> 9 GP, 27 CP; Practical=22/25 -> 9 GP, 9 CP -> Total 36 CP)
     '18', '17', '9', '43', '22',
-    // BMAC: CIE1=15, CIE2=15, CIE3=7, EndSem=37, Practical=19 (93/125 = 74.4% -> 8 GP, 32 CP)
+    // BMAC: CIE1=15, CIE2=15, CIE3=7, EndSem=37, Practical=19 (Theory=74/100 -> 8 GP, 24 CP; Practical=19/25 -> 8 GP, 8 CP -> Total 32 CP)
     '15', '15', '7', '37', '19',
-    // IKS: CIE1=18, CIE2=19, CIE3=9 (46/50 = 92.0% -> 10 GP, 20 CP)
+    // IKS: CIE1=18, CIE2=19, CIE3=9 (46/50 = 92% -> 10 GP, 20 CP)
     '18', '19', '9',
-    // DTI: PPT1=9, PPT2=9, Quiz=8, Project=18, Practical=22 (66/75 = 88.0% -> 9 GP, 18 CP)
+    // DTI: PPT1=9, PPT2=9, Quiz=8, Project=18, Practical=22 (66/75 = 88% -> 9 GP, 18 CP)
     '9', '9', '8', '18', '22',
-    // CHSV: CIE1=17, CIE2=16, CIE3=8, Homework=22 (63/75 = 84.0% -> 9 GP, 18 CP)
+    // CHSV: CIE1=17, CIE2=16, CIE3=8, Homework=22 (63/75 = 84% -> 9 GP, 18 CP)
     '17', '16', '8', '22'
   ];
 
@@ -1111,7 +1402,7 @@ function fillSample() {
     input.value = demo[i] || '';
   });
   calculate();
-  showToast('Official sample marks loaded');
+  showToast('Official sample marks loaded (27/27 fields complete)');
 }
 
 // Initialize and attach non-wheel listeners
@@ -1124,7 +1415,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
     }, { passive: false });
 
-    // 2. Immediate keyboard input calculation
+    // 2. Immediate keyboard input calculation with strict validation
     input.addEventListener('input', function() {
       const max = parseFloat(this.dataset.max) || 100;
       if (this.value !== '') {
@@ -1132,7 +1423,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isNaN(val)) {
           if (val > max) {
             this.value = max;
-            showToast(`Max marks is ${max}`);
+            showToast(`Maximum marks for this field is ${max}`);
           } else if (val < 0) {
             this.value = 0;
           }
