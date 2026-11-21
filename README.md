@@ -41,7 +41,7 @@ A modern, aesthetic, component-aware SGPA calculator designed specifically for *
 | Subject | Theory Max | Practical Max | Total Marks | Credits |
 | :--- | :---: | :---: | :---: | :---: |
 | **Engineering Mathematics** | 100 | 25 | 125 | 4 |
-| **PST (Problem Solving & Thinking)** | 100 | 25 | 125 | 4 |
+| **PST (Problem Solving Techniques)** | 100 | 25 | 125 | 4 |
 | **Applied Science (Chemistry)** | 100 | 25 | 125 | 4 |
 | **BMAC (Basics of Mech & Civil)** | 100 | 25 | 125 | 4 |
 
@@ -53,6 +53,21 @@ A modern, aesthetic, component-aware SGPA calculator designed specifically for *
 | **IKS (Indian Knowledge Systems)** | CI-1 (20) + CI-2 (20) + CI-3 (10) | 50 | 2 |
 | **DTI (Design Thinking & Innovation)** | PPT 1 (10) + PPT 2 (10) + Quiz (10) + Project (20) + Practical (25) | 75 | 2 |
 | **CHSV (Constitution, Ethics & Human Values)** | CI-1 (20) + CI-2 (20) + CI-3 (10) + Homework (25) | 75 | 2 |
+
+---
+
+## 📋 Overall Semester 1 Summary (22 Credits • 700 Assessment Marks)
+
+| Subject | Credits | Total Marks |
+| :--- | :---: | :---: |
+| **Engineering Mathematics** | 4 | 125 |
+| **PST (Problem Solving Techniques)** | 4 | 125 |
+| **Applied Science (Chemistry)** | 4 | 125 |
+| **BMAC** | 4 | 125 |
+| **IKS** | 2 | 50 |
+| **DTI** | 2 | 75 |
+| **CHSV** | 2 | 75 |
+| **Total** | **22** | **700** |
 
 ---
 

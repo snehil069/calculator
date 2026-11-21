@@ -943,7 +943,7 @@ footer a:hover {
             <div class="brand-logo">AIT</div>
             <div class="brand-text">
                 <h1>AIT Pune SGPA Calculator <span class="pill-autonomous">Autonomous</span></h1>
-                <p>Semester 1 (FE) • 22 Total Credits • Dynamic Component-Aware Evaluation</p>
+                <p>Semester 1 (FE) • 22 Total Credits • 700 Assessment Marks • Dynamic Evaluation</p>
             </div>
         </div>
         <div class="header-actions">
@@ -1119,7 +1119,7 @@ footer a:hover {
                 <div class="subject-info">
                     <div class="subject-icon">💻</div>
                     <div class="subject-name-group">
-                        <h3>PST (Problem Solving & Thinking)</h3>
+                        <h3>PST (Problem Solving Techniques)</h3>
                         <div class="subject-meta">
                             <span class="credit-tag">4 Credits</span>
                             <span class="eval-status-tag" id="pst-status">No marks entered</span>
@@ -1578,12 +1578,83 @@ footer a:hover {
             </tbody>
         </table>
 
-        <div style="padding: 12px; border-radius: 10px; background: var(--stat-bg); border: 1px solid var(--stat-border); font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+        <div style="padding: 12px; border-radius: 10px; background: var(--stat-bg); border: 1px solid var(--stat-border); font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px;">
             <strong>4-Credit Subject Weighting:</strong><br>
             • Theory (CI 1, CI 2, CI 3, End Sem = 100 marks) carries 3 credits weight.<br>
             • Practical (25 marks) carries 1 credit weight.<br>
             • In progressive mode, if only theory or only practical has been taken so far, the subject grade point is calculated based strictly on the evaluated components!
         </div>
+
+        <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">📚 Semester 1 Marks & Credits Scheme (700 Marks)</h4>
+        <table class="grade-table">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Credits</th>
+                    <th>Theory / Exam</th>
+                    <th>Practical / Other</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Engineering Mathematics</strong></td>
+                    <td>4</td>
+                    <td>100 (CI1:20, CI2:20, CI3:10, EndSem:50)</td>
+                    <td>25</td>
+                    <td><strong>125</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>PST (Problem Solving Tech.)</strong></td>
+                    <td>4</td>
+                    <td>100 (CI1:20, CI2:20, CI3:10, EndSem:50)</td>
+                    <td>25</td>
+                    <td><strong>125</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Applied Science (Chemistry)</strong></td>
+                    <td>4</td>
+                    <td>100 (CI1:20, CI2:20, CI3:10, EndSem:50)</td>
+                    <td>25</td>
+                    <td><strong>125</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>BMAC</strong></td>
+                    <td>4</td>
+                    <td>100 (CI1:20, CI2:20, CI3:10, EndSem:50)</td>
+                    <td>25</td>
+                    <td><strong>125</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>IKS</strong></td>
+                    <td>2</td>
+                    <td>50 (CI1:20, CI2:20, CI3:10)</td>
+                    <td>--</td>
+                    <td><strong>50</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>DTI</strong></td>
+                    <td>2</td>
+                    <td>50 (PPT1:10, PPT2:10, Quiz:10, Proj:20)</td>
+                    <td>25</td>
+                    <td><strong>75</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>CHSV</strong></td>
+                    <td>2</td>
+                    <td>50 (CI1:20, CI2:20, CI3:10)</td>
+                    <td>25 (HW)</td>
+                    <td><strong>75</strong></td>
+                </tr>
+                <tr style="font-weight: 700; background: rgba(99, 102, 241, 0.08);">
+                    <td>Total (7 Subjects)</td>
+                    <td>22</td>
+                    <td>550</td>
+                    <td>150</td>
+                    <td>700 Marks</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -1676,7 +1747,7 @@ function calculate() {
     
     let totalMarksScored = 0;
     let totalMarksEvaluated = 0;
-    let totalSemPossibleMarks = 600; // 4*125 + 50 + 75 + 75 = 600
+    let totalSemPossibleMarks = 700; // 4*125 + 50 + 75 + 75 = 700
     
     let activeSubjectsCount = 0;
     let totalFieldsFilled = 0;
@@ -1950,7 +2021,7 @@ function calculate() {
     // Secondary Stats
     document.getElementById('marksEvaluated').textContent = `${totalMarksScored} / ${totalMarksEvaluated}`;
     const overallMarksPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
-    document.getElementById('marksPercent').textContent = `${overallMarksPct}% average across included`;
+    document.getElementById('marksPercent').textContent = totalMarksEvaluated > 0 ? `${overallMarksPct}% avg (${totalMarksScored}/700 total sem marks)` : '0.0% weighted';
 
     document.getElementById('creditsEvaluated').textContent = `${evaluatedCreditsSum} / ${totalCreditsPossible}`;
     document.getElementById('subjectsCount').textContent = `${activeSubjectsCount} of 7 subjects active`;
@@ -2003,7 +2074,7 @@ function calculateForecast(currentSGPA, evaluatedCredits, totalCredits, scoredMa
     } else {
         // Approximate needed percentage based on grade scale
         let approxPct = neededGP * 10;
-        forecastResult.innerHTML = `Need avg <strong>${neededGP.toFixed(2)} GP (~${approxPct.toFixed(0)}%)</strong> in remaining ${remainingMarks} marks`;
+        forecastResult.innerHTML = `Need avg <strong>${neededGP.toFixed(2)} GP (~${approxPct.toFixed(0)}%)</strong> in remaining ${remainingMarks} / 700 marks`;
     }
 }
 
