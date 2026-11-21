@@ -53,26 +53,11 @@ body {
   line-height: 1.5;
   padding: 32px 16px 140px;
   min-height: 100vh;
-  position: relative;
-}
-
-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(11, 21, 36, 0.35) 0%, rgba(11, 21, 36, 0.1) 40%, rgba(11, 21, 36, 0.05) 80%, rgba(11, 21, 36, 0.15) 100%);
-  pointer-events: none;
-  z-index: 0;
 }
 
 .container {
   max-width: 960px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
 /* ==========================================================================
@@ -113,12 +98,9 @@ input[type=number] {
 header.page-header {
   margin-bottom: 28px;
   padding: 24px 28px;
-  background: rgba(242, 248, 247, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  background-color: #ffffff;
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-cards);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -161,7 +143,7 @@ header.page-header {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .btn-pill:hover {
@@ -185,11 +167,8 @@ header.page-header {
    Clean SGPA Dashboard Summary (Single Mint Card, Flat, No Shadows)
    ========================================================================== */
 .summary-card {
-  background: rgba(228, 240, 241, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.14);
+  background-color: var(--color-card-mint);
+  border: 1px solid #c5dfde;
   border-radius: var(--radius-cards);
   padding: 24px 28px;
   margin-bottom: 36px;
@@ -278,12 +257,9 @@ header.page-header {
   align-items: center;
   margin-bottom: 16px;
   padding: 12px 20px;
-  background: rgba(242, 248, 247, 0.90);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background-color: #ffffff;
+  border: 1px solid var(--border-hairline);
   border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .section-label-bar h2 {
@@ -307,19 +283,15 @@ header.page-header {
 }
 
 .subject-card {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.09);
+  background-color: #ffffff;
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-cards);
   padding: 20px 24px;
-  transition: all 0.2s ease;
+  transition: border-color 0.15s ease;
 }
 
 .subject-card:hover {
   border-color: var(--color-sage);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
 }
 
 .subject-header-row {
@@ -470,7 +442,7 @@ header.page-header {
   border: 1px solid var(--border-hairline);
   border-radius: 6px;
   outline: none;
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .input-box-wrapper input:focus {
@@ -502,11 +474,8 @@ header.page-header {
 
 /* Reference Scheme Table */
 .reference-card {
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.09);
+  background-color: #ffffff;
+  border: 1px solid var(--border-hairline);
   border-radius: var(--radius-cards);
   padding: 24px;
   margin-top: 40px;
@@ -535,7 +504,7 @@ header.page-header {
   font-size: 11px;
   text-transform: uppercase;
   color: var(--color-pine-shadow);
-  background-color: rgba(242, 248, 247, 0.90);
+  background-color: var(--color-paper-white);
 }
 
 /* Toast */
@@ -1367,16 +1336,24 @@ function calculate() {
     fieldsDoneSub.textContent = '0 of 27 fields logged';
   }
 
-  saveData();
+  triggerSave();
 }
 
-// LocalStorage helpers
+// Debounced LocalStorage helper to prevent typing lag
+let saveTimer = null;
+function triggerSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 250);
+}
+
 function saveData() {
   const data = {};
   document.querySelectorAll('.m-input').forEach((input, idx) => {
     if (input.value.trim() !== '') data[idx] = input.value;
   });
-  localStorage.setItem('ait_marks_clean', JSON.stringify(data));
+  try {
+    localStorage.setItem('ait_marks_clean', JSON.stringify(data));
+  } catch(e) {}
 }
 
 function loadData() {
