@@ -3,79 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIT Pune — Semester 1 Academic Journal & SGPA Calculator</title>
+<title>AIT Pune — Semester 1 SGPA Calculator</title>
 
-<!-- Typography: Lora (P22 Mackinac Pro substitute), Plus Jakarta Sans (Sofia Pro substitute), IBM Plex Mono -->
+<!-- Fonts: Lora (Serif display), Plus Jakarta Sans (Clean UI body), IBM Plex Mono (Eyebrows & labels) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 /* ==========================================================================
-   Design Tokens — User Interviews Style Reference (Hand-drawn research notes on warm paper)
+   Design Tokens — Minimal Warm Paper & Deep Teal
    ========================================================================== */
 :root {
-  /* Colors */
   --color-deep-teal: #1c5d5f;
   --color-pine-shadow: #0e4749;
   --color-sage: #65b8a2;
-  --color-lake-teal: #2a7779;
   --color-forest-floor: #156152;
-  --color-ink-navy: #16325a;
-  --color-dusty-rose: #d6aec1;
-  --color-mint-mist: #a2cbcd;
-  --color-sea-foam: #cae1e2;
   --color-paper-white: #f2f8f7;
   --color-card-mint: #e4f0f1;
-  --color-blush-sand: #f2e8e2;
   --color-charcoal-navy: #283338;
-  --color-slate: #333333;
-  --color-soft-black: #1a1a1a;
-  --color-illustration-ink: #231e21;
+  --color-slate: #4a5568;
+  --color-muted: #718096;
 
-  /* Typography */
-  --font-serif: 'Lora', 'Source Serif 4', Georgia, serif;
+  --font-serif: 'Lora', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, Monaco, Consolas, monospace;
+  --font-mono: 'IBM Plex Mono', monospace;
 
-  /* Typography Scale */
-  --text-caption: 12px;
-  --text-body-sm: 14px;
-  --text-body: 16px;
-  --text-subheading: 20px;
-  --text-heading-sm: 24px;
-  --text-heading: 42px;
-  --text-heading-lg: 50px;
-  --text-display: 60px;
-
-  /* Spacing */
-  --spacing-8: 8px;
-  --spacing-16: 16px;
-  --spacing-24: 24px;
-  --spacing-32: 32px;
-  --spacing-40: 40px;
-  --spacing-48: 48px;
-  --spacing-64: 64px;
-  --spacing-88: 88px;
-
-  /* Border Radii */
   --radius-buttons: 48px;
   --radius-pills: 1000px;
-  --radius-nav: 88px;
-  --radius-tags: 100px;
   --radius-cards: 12px;
-
-  /* Surfaces & Borders (Strictly Flat: No Drop Shadows!) */
-  --surface-page: #f2f8f7;
-  --surface-card: #e4f0f1;
-  --surface-blush: #f2e8e2;
-  --surface-white: #ffffff;
   --border-hairline: #d1e5e4;
-  --border-blush: #e8d7cf;
-  --border-ink: #231e21;
 }
 
-/* Base Reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -84,116 +43,95 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--surface-page);
+  background-color: var(--color-paper-white);
   color: var(--color-charcoal-navy);
   line-height: 1.5;
-  font-size: var(--text-body);
-  padding: 0 16px 88px;
-  -webkit-font-smoothing: antialiased;
+  padding: 32px 16px 80px;
   min-height: 100vh;
 }
 
-/* Container */
-.page-container {
-  max-width: 1080px;
+.container {
+  max-width: 960px;
   margin: 0 auto;
 }
 
-/* Eyebrow Label: IBM Plex Mono uppercase with tracking & colored dot prefix */
+/* ==========================================================================
+   Input Wheel & Spin Button Fix (CRITICAL)
+   Disables stepper arrows and prevents mouse scroll wheel from changing numbers
+   ========================================================================== */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Header & Typography */
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-pine-shadow);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .eyebrow-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: var(--color-deep-teal);
   display: inline-block;
 }
 
-.eyebrow-dot.navy { background-color: var(--color-ink-navy); }
-.eyebrow-dot.sage { background-color: var(--color-sage); }
-.eyebrow-dot.rose { background-color: var(--color-dusty-rose); }
+header.page-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
 
-/* Buttons & Pills (48px - 1000px radius) */
-.btn-primary {
-  background-color: var(--color-deep-teal);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-buttons);
-  padding: 12px 24px;
-  font-family: var(--font-sans);
-  font-size: 14px;
+.header-title-group h1 {
+  font-family: var(--font-serif);
+  font-size: 32px;
   font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--color-forest-floor);
-}
-
-.btn-secondary-navy {
-  background-color: var(--color-ink-navy);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--radius-buttons);
-  padding: 12px 24px;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: opacity 0.15s ease;
-}
-
-.btn-secondary-navy:hover {
-  opacity: 0.92;
-}
-
-.btn-ghost {
-  background-color: transparent;
-  color: var(--color-pine-shadow);
-  border: 1px solid var(--color-pine-shadow);
-  border-radius: var(--radius-buttons);
-  padding: 10px 20px;
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color 0.15s ease;
-}
-
-.btn-ghost:hover {
-  background-color: var(--color-card-mint);
-}
-
-.btn-pill-compact {
-  border-radius: var(--radius-pills);
-  padding: 6px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--border-hairline);
-  background-color: var(--surface-card);
   color: var(--color-charcoal-navy);
+  margin-top: 4px;
+  letter-spacing: -0.3px;
+}
+
+.header-title-group p {
+  font-size: 14.5px;
+  color: var(--color-slate);
+  margin-top: 4px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Minimalist Pill Buttons */
+.btn-pill {
+  background-color: var(--color-card-mint);
+  color: var(--color-pine-shadow);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-buttons);
+  padding: 8px 18px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -201,392 +139,145 @@ body {
   transition: all 0.15s ease;
 }
 
-.btn-pill-compact:hover {
+.btn-pill:hover {
   border-color: var(--color-deep-teal);
   color: var(--color-deep-teal);
+  background-color: #ffffff;
 }
 
-.btn-pill-compact.active {
+.btn-pill-primary {
   background-color: var(--color-deep-teal);
   color: #ffffff;
   border-color: var(--color-deep-teal);
 }
 
+.btn-pill-primary:hover {
+  background-color: var(--color-forest-floor);
+  color: #ffffff;
+}
+
 /* ==========================================================================
-   Header Navigation
+   Clean SGPA Dashboard Summary (Single Mint Card, Flat, No Shadows)
    ========================================================================== */
-header.app-header {
-  padding: 24px 0 20px;
-  border-bottom: 1px solid var(--border-hairline);
-  margin-bottom: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.nav-brand-ink-frame {
-  width: 44px;
-  height: 44px;
-  border: 1.5px solid var(--color-illustration-ink);
-  border-radius: 10px;
+.summary-card {
   background-color: var(--color-card-mint);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.nav-brand-ink-frame svg {
-  width: 24px;
-  height: 24px;
-}
-
-.nav-brand-text h1 {
-  font-family: var(--font-serif);
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--color-charcoal-navy);
-  line-height: 1.2;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* ==========================================================================
-   Hero Section with Editorial Serif & Hand-Drawn Elements
-   ========================================================================== */
-.hero-editorial {
-  padding: 24px 0 40px;
-  position: relative;
-}
-
-.hero-layout {
+  border: 1px solid #c5dfde;
+  border-radius: var(--radius-cards);
+  padding: 24px 28px;
+  margin-bottom: 36px;
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 32px;
+  grid-template-columns: auto 1fr;
   align-items: center;
+  gap: 36px;
 }
 
-@media(max-width: 860px) {
-  .hero-layout {
+@media(max-width: 680px) {
+  .summary-card {
     grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
   }
 }
 
-.hero-content h2.display-headline {
+.summary-score-col {
+  border-right: 1px solid #c5dfde;
+  padding-right: 36px;
+  min-width: 170px;
+}
+
+@media(max-width: 680px) {
+  .summary-score-col {
+    border-right: none;
+    border-bottom: 1px solid #c5dfde;
+    padding-right: 0;
+    padding-bottom: 16px;
+  }
+}
+
+.sgpa-big-number {
   font-family: var(--font-serif);
-  font-size: 42px;
-  line-height: 1.18;
-  font-weight: 500;
-  color: var(--color-charcoal-navy);
-  margin: 12px 0 16px;
-  letter-spacing: -0.5px;
-}
-
-.display-headline em {
-  font-style: italic;
+  font-size: 54px;
+  font-weight: 700;
+  line-height: 1;
   color: var(--color-deep-teal);
-  font-weight: 600;
+  margin: 6px 0 2px;
 }
 
-.hero-content p.hero-lead {
-  font-size: 16px;
+.sgpa-caption {
+  font-size: 12.5px;
   color: var(--color-slate);
-  max-width: 620px;
-  line-height: 1.56;
-  margin-bottom: 24px;
 }
 
-/* Hand-drawn Illustrated Browser Frame Box */
-.illustrated-browser-frame {
-  border: 1.5px solid var(--color-illustration-ink);
-  border-radius: 12px;
-  background-color: var(--surface-white);
-  padding: 16px 20px;
-  position: relative;
-  background-image: 
-    radial-gradient(var(--border-hairline) 1px, transparent 1px);
-  background-size: 16px 16px;
+.summary-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
 }
 
-.browser-header-dots {
+.metric-item {
   display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
+  flex-direction: column;
+}
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-pine-shadow);
+  margin-bottom: 2px;
+}
+
+.metric-value {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-charcoal-navy);
+}
+
+.metric-sub {
+  font-size: 12px;
+  color: var(--color-slate);
+  margin-top: 1px;
+}
+
+/* ==========================================================================
+   Subject Cards List (Clean, Minimal, No GP, Only %)
+   ========================================================================== */
+.section-label-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-hairline);
 }
 
-.dot-ink {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  border: 1.2px solid var(--color-illustration-ink);
-}
-.dot-ink.fill-rose { background-color: var(--color-dusty-rose); }
-.dot-ink.fill-sage { background-color: var(--color-sage); }
-.dot-ink.fill-teal { background-color: var(--color-sea-foam); }
-
-.browser-inner-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-pine-shadow);
-  line-height: 1.6;
-}
-
-.browser-inner-note strong {
-  color: var(--color-deep-teal);
-}
-
-.doodle-star {
-  position: absolute;
-  top: -12px;
-  right: -10px;
-  color: var(--color-sage);
-}
-
-/* ==========================================================================
-   Stat Banner Strip (Full Width Mono Bar)
-   ========================================================================== */
-.stat-banner-strip {
-  background-color: var(--color-card-mint);
-  border: 1px solid var(--color-mint-mist);
-  border-radius: 12px;
-  padding: 16px 24px;
-  margin-bottom: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--color-charcoal-navy);
-  letter-spacing: 0.038em;
-}
-
-.stat-item-unit {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.stat-item-unit strong {
-  font-weight: 600;
-  color: var(--color-pine-shadow);
-}
-
-.stat-pipe {
-  color: var(--color-mint-mist);
-  font-weight: 300;
-}
-
-/* ==========================================================================
-   Two-Column Feature Cards: Standings & Forecaster
-   ========================================================================== */
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 48px;
-}
-
-@media(max-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.feature-panel {
-  border-radius: var(--radius-cards);
-  padding: 28px;
-  position: relative;
-  border: 1px solid transparent;
-}
-
-/* Card 1: Card Mint */
-.panel-mint {
-  background-color: var(--color-card-mint);
-  border-color: var(--color-mint-mist);
-}
-
-/* Card 2: Blush Sand */
-.panel-blush {
-  background-color: var(--color-blush-sand);
-  border-color: var(--border-blush);
-}
-
-.feature-panel-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.sgpa-serif-hero {
-  font-family: var(--font-serif);
-  font-size: 56px;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--color-deep-teal);
-  margin: 10px 0 6px;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.sgpa-grade-pill {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: var(--radius-tags);
-  background-color: var(--color-deep-teal);
-  color: #ffffff;
-}
-
-.panel-meta-text {
-  font-size: 14px;
-  color: var(--color-slate);
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-/* Monospace Stat Row */
-.mono-stat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border-top: 1px solid rgba(14, 71, 73, 0.15);
-  padding-top: 14px;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-}
-
-.mono-stat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.mono-stat-row span.label {
-  color: var(--color-slate);
-}
-
-.mono-stat-row strong.value {
-  color: var(--color-charcoal-navy);
-  font-weight: 600;
-}
-
-/* Target Input Box inside Blush Panel */
-.target-input-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 16px 0;
-  background-color: var(--surface-white);
-  border: 1px solid var(--border-blush);
-  border-radius: 10px;
-  padding: 10px 16px;
-}
-
-.target-input-row label {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-charcoal-navy);
-  text-transform: uppercase;
-}
-
-.target-input-row input {
-  width: 70px;
+.section-label-bar h2 {
   font-family: var(--font-serif);
   font-size: 20px;
-  font-weight: 700;
-  color: var(--color-deep-teal);
-  border: none;
-  background: transparent;
-  outline: none;
-  text-align: center;
-  border-bottom: 1.5px solid var(--color-deep-teal);
-}
-
-.forecast-announcement-box {
-  background-color: rgba(255, 255, 255, 0.6);
-  border: 1px solid var(--border-blush);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-size: 13.5px;
-  color: var(--color-charcoal-navy);
-  line-height: 1.5;
-}
-
-.forecast-announcement-box strong {
-  color: var(--color-deep-teal);
-  font-weight: 600;
-}
-
-/* ==========================================================================
-   Filter & Action Bar (Low-elevation pill controls)
-   ========================================================================== */
-.controls-strip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 16px 0;
-  margin-bottom: 32px;
-  border-bottom: 1px solid var(--border-hairline);
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* ==========================================================================
-   Subject Cards Section
-   ========================================================================== */
-.section-header-block {
-  margin-bottom: 24px;
-}
-
-.section-header-block h3.section-heading-serif {
-  font-family: var(--font-serif);
-  font-size: 28px;
   font-weight: 600;
   color: var(--color-charcoal-navy);
-  margin-top: 6px;
+}
+
+.section-label-bar span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-slate);
 }
 
 .subjects-list {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 56px;
+  gap: 20px;
+  margin-bottom: 40px;
 }
 
-/* Subject Card (Flat surface, paper look) */
 .subject-card {
-  background-color: var(--surface-white);
+  background-color: #ffffff;
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-cards);
-  padding: 24px;
+  padding: 20px 24px;
   transition: border-color 0.15s ease;
 }
 
@@ -594,961 +285,590 @@ header.app-header {
   border-color: var(--color-sage);
 }
 
-.subject-card.has-data {
-  border-left: 4px solid var(--color-deep-teal);
-}
-
-.subject-card-header {
+.subject-header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 14px;
   margin-bottom: 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--surface-page);
+  gap: 12px;
 }
 
-.subject-title-area h4 {
+.subject-title-area h3 {
   font-family: var(--font-serif);
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--color-charcoal-navy);
-  margin: 4px 0 2px;
+  margin-bottom: 4px;
 }
 
-.subject-tags-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-  flex-wrap: wrap;
-}
-
-.credit-pill {
+.credit-tag {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: var(--radius-tags);
+  padding: 2px 8px;
+  border-radius: 4px;
   background-color: var(--color-card-mint);
   color: var(--color-pine-shadow);
-  border: 1px solid var(--border-hairline);
+  display: inline-block;
 }
 
-.badge-status {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  padding: 3px 10px;
-  border-radius: var(--radius-tags);
-}
-
-.badge-status.active {
-  background-color: rgba(28, 93, 95, 0.1);
-  color: var(--color-deep-teal);
-}
-
-.badge-status.empty {
-  background-color: var(--surface-page);
-  color: var(--color-slate);
-}
-
-.subject-score-badge {
+/* ONLY PERCENTAGE in individual subjects (NO GP) */
+.subject-percentage-area {
   text-align: right;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.subject-gp-display {
+.subject-pct-big {
   font-family: var(--font-serif);
   font-size: 24px;
   font-weight: 700;
   color: var(--color-deep-teal);
-  line-height: 1.1;
+  line-height: 1;
 }
 
-.subject-subgrade-text {
+.subject-score-raw {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--color-slate);
   margin-top: 3px;
 }
 
-/* Thin Flat Progress Strip */
-.flat-progress-track {
-  width: 100%;
-  height: 4px;
-  background-color: var(--surface-page);
-  border-radius: 2px;
-  margin-bottom: 18px;
-  overflow: hidden;
-}
-
-.flat-progress-fill {
-  height: 100%;
-  width: 0%;
-  background-color: var(--color-deep-teal);
-  transition: width 0.25s ease;
-}
-
-/* Input Fields Grid (Hand-drawn paper notebook feel) */
-.fields-grid {
+/* Input Fields Grid */
+.inputs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 12px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
-.field-cell {
+.input-box-wrapper {
   display: flex;
   flex-direction: column;
 }
 
-.field-cell-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.input-box-wrapper label {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--color-charcoal-navy);
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.field-max-badge {
-  color: var(--color-slate);
+.input-box-wrapper label span.max-label {
+  color: var(--color-muted);
   font-weight: 400;
 }
 
-.field-cell-input-wrapper {
-  position: relative;
-}
-
-.field-cell input {
+.input-box-wrapper input {
   width: 100%;
   padding: 9px 12px;
   font-family: var(--font-sans);
   font-size: 15px;
   font-weight: 600;
   color: var(--color-charcoal-navy);
-  background-color: var(--surface-page);
+  background-color: var(--color-paper-white);
   border: 1px solid var(--border-hairline);
-  border-radius: 8px;
+  border-radius: 6px;
   outline: none;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
-.field-cell input:focus {
+.input-box-wrapper input:focus {
   border-color: var(--color-deep-teal);
-  background-color: var(--surface-white);
+  background-color: #ffffff;
 }
 
-.field-cell input.has-value {
+.input-box-wrapper input.has-val {
   border-color: var(--color-sage);
   background-color: #ffffff;
 }
 
-.field-cell-micro-status {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--color-pine-shadow);
-  margin-top: 3px;
-  min-height: 16px;
-  text-align: right;
-}
-
-/* Checklist Feature List (Exact style from design.md) */
-.subject-summary-checklist {
+/* Summary Checklist Line */
+.subject-footer-breakdown {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
-  background-color: var(--surface-page);
-  border: 1px solid var(--border-hairline);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 13px;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--color-slate);
+  padding-top: 10px;
+  border-top: 1px solid var(--color-paper-white);
+}
+
+.subject-footer-breakdown strong {
+  font-family: var(--font-mono);
   color: var(--color-charcoal-navy);
 }
 
-.check-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.check-mark {
-  color: var(--color-pine-shadow);
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.check-item strong {
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-}
-
-/* ==========================================================================
-   Academic Grading Reference (Paper Sheet)
-   ========================================================================== */
-.reference-card-paper {
-  background-color: var(--surface-white);
+/* Reference Scheme Table */
+.reference-card {
+  background-color: #ffffff;
   border: 1px solid var(--border-hairline);
   border-radius: var(--radius-cards);
-  padding: 32px;
-  margin-bottom: 56px;
+  padding: 24px;
+  margin-top: 40px;
 }
 
-.table-clean {
+.reference-card h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  margin-bottom: 12px;
+}
+
+.clean-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 18px 0;
-  font-size: 13.5px;
+  font-size: 13px;
 }
 
-.table-clean th, .table-clean td {
-  padding: 10px 14px;
+.clean-table th, .clean-table td {
+  padding: 8px 12px;
   text-align: left;
   border-bottom: 1px solid var(--border-hairline);
 }
 
-.table-clean th {
+.clean-table th {
   font-family: var(--font-mono);
-  font-size: 11.5px;
+  font-size: 11px;
   text-transform: uppercase;
   color: var(--color-pine-shadow);
-  letter-spacing: 0.04em;
-  background-color: var(--surface-page);
+  background-color: var(--color-paper-white);
 }
 
-.table-clean tr:hover td {
-  background-color: var(--color-card-mint);
-}
-
-/* Footer */
-footer.app-footer {
-  text-align: center;
-  padding: 32px 0;
-  border-top: 1px solid var(--border-hairline);
-  font-size: 13px;
-  color: var(--color-slate);
-}
-
-footer.app-footer a {
-  color: var(--color-deep-teal);
-  text-decoration: underline;
-}
-
-/* Toast Message */
-.toast-notice {
+/* Toast */
+.toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
   background-color: var(--color-charcoal-navy);
   color: #ffffff;
-  padding: 12px 20px;
+  padding: 10px 18px;
   border-radius: var(--radius-pills);
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 12px;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(12px);
+  transform: translateY(8px);
   transition: all 0.2s ease;
-  z-index: 1000;
+  z-index: 999;
 }
 
-.toast-notice.show {
+.toast.show {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Print View */
 @media print {
-  body {
-    background-color: #ffffff !important;
-    padding: 0 !important;
-  }
-  .controls-strip, .nav-actions, .stat-banner-strip, .btn-primary, .btn-ghost, footer {
-    display: none !important;
-  }
-  .subject-card {
-    break-inside: avoid;
-    border: 1px solid #ccc !important;
-    margin-bottom: 16px;
-  }
+  .header-actions, .toast { display: none !important; }
+  body { background: #fff !important; padding: 0 !important; }
+  .subject-card { break-inside: avoid; border: 1px solid #ccc !important; }
 }
 </style>
 </head>
 <body>
 
-<div class="page-container">
+<div class="container">
 
-  <!-- Header Navigation -->
-  <header class="app-header">
-    <div class="nav-brand">
-      <div class="nav-brand-ink-frame">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#231e21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-        </svg>
-      </div>
-      <div class="nav-brand-text">
-        <span class="eyebrow"><span class="eyebrow-dot"></span> AIT Pune · Academic Journal</span>
-        <h1>Semester 1 SGPA Calculator</h1>
-      </div>
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-title-group">
+      <span class="eyebrow"><span class="eyebrow-dot"></span> AIT Pune · Academic Evaluation</span>
+      <h1>Semester 1 SGPA Calculator</h1>
+      <p>Calculates your current standing out of completed fields only. Untaken exams are not penalized as zero.</p>
     </div>
-    <div class="nav-actions">
-      <button class="btn-ghost" onclick="scrollToReference()">
-        <span>Grading Scale & Scheme</span>
-      </button>
-      <button class="btn-primary" onclick="fillRealisticSample()">
-        <span>Load Sample Marks</span>
-      </button>
+    <div class="header-actions">
+      <button class="btn-pill" onclick="fillSample()">🪄 Sample Marks</button>
+      <button class="btn-pill" onclick="resetCalculator()">🗑️ Reset</button>
+      <button class="btn-pill btn-pill-primary" onclick="window.print()">🖨️ Print</button>
     </div>
   </header>
 
-  <!-- Hero Section with Editorial Serif & Hand-Drawn Research Tone -->
-  <section class="hero-editorial">
-    <div class="hero-layout">
-      <div class="hero-content">
-        <span class="eyebrow"><span class="eyebrow-dot sage"></span> Autonomous B.Tech Evaluation System</span>
-        <h2 class="display-headline">
-          Calculate your semester standing, <em>out of what is included.</em>
-        </h2>
-        <p class="hero-lead">
-          Field notes on your First Year coursework. Enter Continuous Internal (CI) assessments, practicals, quizzes, or assignments as they occur throughout the term. Your GPA is computed strictly from completed evaluations—untested exams are never penalized as zero.
-        </p>
-      </div>
-
-      <!-- Illustrated Inked Note Frame -->
-      <div class="illustrated-browser-frame">
-        <div class="browser-header-dots">
-          <span class="dot-ink fill-rose"></span>
-          <span class="dot-ink fill-sage"></span>
-          <span class="dot-ink fill-teal"></span>
-        </div>
-        <svg class="doodle-star" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
-        </svg>
-        <div class="browser-inner-note">
-          <strong>FIELD NOTE // SEM-01:</strong><br>
-          7 Academic Courses<br>
-          22 Credit Units Assigned<br>
-          700 Assessment Marks<br>
-          Weighting: Theory (3 Credits) + Practical (1 Credit) in core 4-credit courses.
-        </div>
-      </div>
+  <!-- Clean Minimalist Dashboard -->
+  <div class="summary-card">
+    <div class="summary-score-col">
+      <span class="eyebrow">Semester SGPA</span>
+      <div class="sgpa-big-number" id="sgpaDisplay">0.00</div>
+      <div class="sgpa-caption" id="evaluatedCreditsText">0 / 22 Credits Evaluated</div>
     </div>
-  </section>
-
-  <!-- Full-Width Stat Banner Strip -->
-  <div class="stat-banner-strip">
-    <div class="stat-item-unit">
-      <strong>22</strong> CREDITS TOTAL
-    </div>
-    <span class="stat-pipe">|</span>
-    <div class="stat-item-unit">
-      <strong>700</strong> ASSESSMENT MARKS
-    </div>
-    <span class="stat-pipe">|</span>
-    <div class="stat-item-unit">
-      <strong id="bannerFieldsDone">0 / 27</strong> EXAM FIELDS LOGGED
-    </div>
-    <span class="stat-pipe">|</span>
-    <div class="stat-item-unit">
-      <strong>DYNAMIC</strong> PROGRESSIVE EVALUATION
-    </div>
-  </div>
-
-  <!-- Two-Column Feature Dashboard (Mint & Blush Surfaces) -->
-  <div class="dashboard-grid">
-    <!-- Panel 1: Mint Surface (Current Standings) -->
-    <div class="feature-panel panel-mint">
-      <div class="feature-panel-top">
-        <span class="eyebrow"><span class="eyebrow-dot"></span> Current Standing</span>
-        <span class="credit-pill" id="activeCreditsBadge">0 / 22 Credits Evaluated</span>
+    <div class="summary-details-grid">
+      <div class="metric-item">
+        <span class="metric-label">Evaluated Percentage</span>
+        <span class="metric-value" id="overallPctDisplay">0.0%</span>
+        <span class="metric-sub">Average across included</span>
       </div>
-      <div class="sgpa-serif-hero">
-        <span id="heroSgpaDisplay">0.00</span>
-        <span class="sgpa-grade-pill" id="heroGradeLetter">--</span>
+      <div class="metric-item">
+        <span class="metric-label">Evaluated Marks</span>
+        <span class="metric-value" id="evaluatedMarksDisplay">0 / 0</span>
+        <span class="metric-sub" id="termTotalMarksSub">out of 700 total marks</span>
       </div>
-      <p class="panel-meta-text" id="heroGradeDesc">
-        Awaiting input. Enter marks below to begin journal calculation.
-      </p>
-
-      <div class="mono-stat-list">
-        <div class="mono-stat-row">
-          <span class="label">Evaluated Score:</span>
-          <strong class="value" id="heroMarksEvaluated">0 / 0 marks</strong>
-        </div>
-        <div class="mono-stat-row">
-          <span class="label">Percentage Scored:</span>
-          <strong class="value" id="heroMarksPct">0.0%</strong>
-        </div>
-        <div class="mono-stat-row">
-          <span class="label">Active Courses:</span>
-          <strong class="value" id="heroActiveCourses">0 of 7 subjects</strong>
-        </div>
-        <div class="mono-stat-row">
-          <span class="label">Total Term Progress:</span>
-          <strong class="value" id="heroOverallTermProgress">0 / 700 marks total</strong>
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel 2: Blush Surface (Target Forecaster) -->
-    <div class="feature-panel panel-blush">
-      <div class="feature-panel-top">
-        <span class="eyebrow"><span class="eyebrow-dot navy"></span> Goal Planner</span>
-        <span class="credit-pill" style="background:#ffffff; border-color:var(--border-blush);">Forecaster</span>
-      </div>
-
-      <div class="target-input-row">
-        <label for="goalSgpaInput">Target SGPA:</label>
-        <input type="number" id="goalSgpaInput" min="4.0" max="10.0" step="0.1" value="9.0" oninput="calculate()">
-        <span style="font-family:var(--font-mono); font-size:12px; color:var(--color-slate);">/ 10.0</span>
-      </div>
-
-      <div class="forecast-announcement-box" id="forecastOutputBox">
-        Target forecast ready. Enter your grades to view required scores for your goal.
-      </div>
-
-      <div class="mono-stat-list" style="margin-top: 14px;">
-        <div class="mono-stat-row">
-          <span class="label">Max Potential SGPA:</span>
-          <strong class="value" id="maxPotentialVal">10.00</strong>
-        </div>
-        <div class="mono-stat-row">
-          <span class="label">Remaining Marks:</span>
-          <strong class="value" id="remainingMarksVal">700 marks pending</strong>
-        </div>
+      <div class="metric-item">
+        <span class="metric-label">Active Courses</span>
+        <span class="metric-value" id="activeCoursesDisplay">0 / 7</span>
+        <span class="metric-sub" id="fieldsDoneSub">0 of 27 fields logged</span>
       </div>
     </div>
   </div>
 
-  <!-- Filter & Action Controls -->
-  <div class="controls-strip">
-    <div class="filter-group">
-      <span class="eyebrow" style="margin-right: 6px;"><span class="eyebrow-dot sage"></span> Mode:</span>
-      <button class="btn-pill-compact active" id="modeBtnProgressive" onclick="setEvaluationMode('progressive')">
-        ✓ Evaluated Components Only
-      </button>
-      <button class="btn-pill-compact" id="modeBtnStrict" onclick="setEvaluationMode('strict')">
-        Strict Final (Unfilled = 0)
-      </button>
-    </div>
-    <div class="filter-group">
-      <button class="btn-pill-compact" onclick="fillRealisticSample()">🪄 Sample Data</button>
-      <button class="btn-pill-compact" onclick="window.print()">🖨️ Print Sheet</button>
-      <button class="btn-pill-compact" onclick="resetAllMarks()">🗑️ Clear</button>
-    </div>
-  </div>
-
-  <!-- Subject Cards: 4-Credit Engineering Courses -->
-  <div class="section-header-block">
-    <span class="eyebrow"><span class="eyebrow-dot"></span> Core Engineering Disciplines</span>
-    <h3 class="section-heading-serif">4-Credit Subjects (100 Theory + 25 Practical = 125 Marks)</h3>
+  <!-- 4-Credit Engineering Courses -->
+  <div class="section-label-bar">
+    <h2>4-Credit Courses</h2>
+    <span>100 Theory + 25 Practical = 125 Marks each</span>
   </div>
 
   <div class="subjects-list">
 
     <!-- 1. Engineering Mathematics -->
     <div class="subject-card" data-code="maths" data-type="four" data-credits="4">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 01</span>
-          <h4>Engineering Mathematics</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">4 Credits</span>
-            <span class="badge-status empty" id="maths-badge-status">0 / 5 fields entered</span>
-          </div>
+          <h3>Engineering Mathematics</h3>
+          <span class="credit-tag">4 Credits</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="maths-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="maths-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="maths-pct">--%</div>
+          <div class="subject-score-raw" id="maths-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="maths-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 1</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci1" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>CI 1</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci1" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 2</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci2" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 2</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci2" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 3</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ci3" data-max="10" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 3</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ci3" data-max="10" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>End Sem</span><span class="field-max-badge">/ 50</span></div>
-          <input type="number" min="0" max="50" placeholder="0" class="grade-input endsem" data-max="50" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>End Sem</span><span class="max-label">50</span></label>
+          <input type="number" min="0" max="50" placeholder="0" class="m-input endsem" data-max="50" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Practical</span><span class="field-max-badge">/ 25</span></div>
-          <input type="number" min="0" max="25" placeholder="0" class="grade-input practical" data-max="25" data-group="practical">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Practical</span><span class="max-label">25</span></label>
+          <input type="number" min="0" max="25" placeholder="0" class="m-input practical" data-max="25" data-group="practical">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Theory Evaluated: <strong id="maths-theory-summary">0 / 0</strong></div>
-        <div class="check-item"><span class="check-mark">✓</span> Practical Evaluated: <strong id="maths-practical-summary">0 / 0</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Included Total: <strong id="maths-total-summary">0 / 0 marks</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Theory: <strong id="maths-theory-sub">--</strong></span>
+        <span>·</span>
+        <span>Practical: <strong id="maths-practical-sub">--</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="maths-fields-sub">0 / 5</strong></span>
       </div>
     </div>
 
-    <!-- 2. PST (Problem Solving Techniques) -->
+    <!-- 2. PST -->
     <div class="subject-card" data-code="pst" data-type="four" data-credits="4">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 02</span>
-          <h4>PST (Problem Solving Techniques)</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">4 Credits</span>
-            <span class="badge-status empty" id="pst-badge-status">0 / 5 fields entered</span>
-          </div>
+          <h3>PST (Problem Solving Techniques)</h3>
+          <span class="credit-tag">4 Credits</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="pst-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="pst-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="pst-pct">--%</div>
+          <div class="subject-score-raw" id="pst-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="pst-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 1</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci1" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>CI 1</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci1" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 2</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci2" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 2</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci2" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 3</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ci3" data-max="10" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 3</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ci3" data-max="10" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>End Sem</span><span class="field-max-badge">/ 50</span></div>
-          <input type="number" min="0" max="50" placeholder="0" class="grade-input endsem" data-max="50" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>End Sem</span><span class="max-label">50</span></label>
+          <input type="number" min="0" max="50" placeholder="0" class="m-input endsem" data-max="50" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Practical</span><span class="field-max-badge">/ 25</span></div>
-          <input type="number" min="0" max="25" placeholder="0" class="grade-input practical" data-max="25" data-group="practical">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Practical</span><span class="max-label">25</span></label>
+          <input type="number" min="0" max="25" placeholder="0" class="m-input practical" data-max="25" data-group="practical">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Theory Evaluated: <strong id="pst-theory-summary">0 / 0</strong></div>
-        <div class="check-item"><span class="check-mark">✓</span> Practical Evaluated: <strong id="pst-practical-summary">0 / 0</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Included Total: <strong id="pst-total-summary">0 / 0 marks</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Theory: <strong id="pst-theory-sub">--</strong></span>
+        <span>·</span>
+        <span>Practical: <strong id="pst-practical-sub">--</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="pst-fields-sub">0 / 5</strong></span>
       </div>
     </div>
 
     <!-- 3. Applied Science (Chemistry) -->
     <div class="subject-card" data-code="chem" data-type="four" data-credits="4">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 03</span>
-          <h4>Applied Science (Chemistry)</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">4 Credits</span>
-            <span class="badge-status empty" id="chem-badge-status">0 / 5 fields entered</span>
-          </div>
+          <h3>Applied Science (Chemistry)</h3>
+          <span class="credit-tag">4 Credits</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="chem-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="chem-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="chem-pct">--%</div>
+          <div class="subject-score-raw" id="chem-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="chem-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 1</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci1" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>CI 1</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci1" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 2</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci2" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 2</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci2" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 3</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ci3" data-max="10" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 3</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ci3" data-max="10" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>End Sem</span><span class="field-max-badge">/ 50</span></div>
-          <input type="number" min="0" max="50" placeholder="0" class="grade-input endsem" data-max="50" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>End Sem</span><span class="max-label">50</span></label>
+          <input type="number" min="0" max="50" placeholder="0" class="m-input endsem" data-max="50" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Practical</span><span class="field-max-badge">/ 25</span></div>
-          <input type="number" min="0" max="25" placeholder="0" class="grade-input practical" data-max="25" data-group="practical">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Practical</span><span class="max-label">25</span></label>
+          <input type="number" min="0" max="25" placeholder="0" class="m-input practical" data-max="25" data-group="practical">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Theory Evaluated: <strong id="chem-theory-summary">0 / 0</strong></div>
-        <div class="check-item"><span class="check-mark">✓</span> Practical Evaluated: <strong id="chem-practical-summary">0 / 0</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Included Total: <strong id="chem-total-summary">0 / 0 marks</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Theory: <strong id="chem-theory-sub">--</strong></span>
+        <span>·</span>
+        <span>Practical: <strong id="chem-practical-sub">--</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="chem-fields-sub">0 / 5</strong></span>
       </div>
     </div>
 
     <!-- 4. BMAC -->
     <div class="subject-card" data-code="bmac" data-type="four" data-credits="4">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 04</span>
-          <h4>BMAC (Basics of Mechanical & Civil)</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">4 Credits</span>
-            <span class="badge-status empty" id="bmac-badge-status">0 / 5 fields entered</span>
-          </div>
+          <h3>BMAC (Basics of Mechanical & Civil)</h3>
+          <span class="credit-tag">4 Credits</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="bmac-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="bmac-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="bmac-pct">--%</div>
+          <div class="subject-score-raw" id="bmac-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="bmac-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 1</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci1" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>CI 1</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci1" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 2</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci2" data-max="20" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 2</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci2" data-max="20" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 3</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ci3" data-max="10" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 3</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ci3" data-max="10" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>End Sem</span><span class="field-max-badge">/ 50</span></div>
-          <input type="number" min="0" max="50" placeholder="0" class="grade-input endsem" data-max="50" data-group="theory">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>End Sem</span><span class="max-label">50</span></label>
+          <input type="number" min="0" max="50" placeholder="0" class="m-input endsem" data-max="50" data-group="theory">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Practical</span><span class="field-max-badge">/ 25</span></div>
-          <input type="number" min="0" max="25" placeholder="0" class="grade-input practical" data-max="25" data-group="practical">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Practical</span><span class="max-label">25</span></label>
+          <input type="number" min="0" max="25" placeholder="0" class="m-input practical" data-max="25" data-group="practical">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Theory Evaluated: <strong id="bmac-theory-summary">0 / 0</strong></div>
-        <div class="check-item"><span class="check-mark">✓</span> Practical Evaluated: <strong id="bmac-practical-summary">0 / 0</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Included Total: <strong id="bmac-total-summary">0 / 0 marks</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Theory: <strong id="bmac-theory-sub">--</strong></span>
+        <span>·</span>
+        <span>Practical: <strong id="bmac-practical-sub">--</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="bmac-fields-sub">0 / 5</strong></span>
       </div>
     </div>
 
   </div>
 
-  <!-- Subject Cards: 2-Credit Value & Skill Courses -->
-  <div class="section-header-block">
-    <span class="eyebrow"><span class="eyebrow-dot navy"></span> Value-Added & Skill Courses</span>
-    <h3 class="section-heading-serif">2-Credit Subjects (IKS: 50 Marks, DTI & CHSV: 75 Marks each)</h3>
+  <!-- 2-Credit Courses -->
+  <div class="section-label-bar">
+    <h2>2-Credit Courses</h2>
+    <span>Value-Added, Skill & Humanity Courses</span>
   </div>
 
   <div class="subjects-list">
 
     <!-- 5. IKS -->
     <div class="subject-card" data-code="iks" data-type="two" data-credits="2">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 05</span>
-          <h4>IKS (Indian Knowledge Systems)</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">2 Credits</span>
-            <span class="badge-status empty" id="iks-badge-status">0 / 3 fields entered</span>
-          </div>
+          <h3>IKS (Indian Knowledge Systems)</h3>
+          <span class="credit-tag">2 Credits · 50 Marks</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="iks-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="iks-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="iks-pct">--%</div>
+          <div class="subject-score-raw" id="iks-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="iks-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 1</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci1" data-max="20">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>CI 1</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci1" data-max="20">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 2</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci2" data-max="20">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 2</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci2" data-max="20">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 3</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ci3" data-max="10">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 3</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ci3" data-max="10">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Total Evaluated: <strong id="iks-total-summary">0 / 0 marks</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Course Weight: <strong>50 Marks Total</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Evaluated Score: <strong id="iks-sub-score">0 / 0</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="iks-fields-sub">0 / 3</strong></span>
       </div>
     </div>
 
     <!-- 6. DTI -->
     <div class="subject-card" data-code="dti" data-type="two" data-credits="2">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 06</span>
-          <h4>DTI (Design Thinking & Innovation)</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">2 Credits</span>
-            <span class="badge-status empty" id="dti-badge-status">0 / 5 fields entered</span>
-          </div>
+          <h3>DTI (Design Thinking & Innovation)</h3>
+          <span class="credit-tag">2 Credits · 75 Marks</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="dti-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="dti-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="dti-pct">--%</div>
+          <div class="subject-score-raw" id="dti-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="dti-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>PPT 1</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ppt1" data-max="10">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>PPT 1</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ppt1" data-max="10">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>PPT 2</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ppt2" data-max="10">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>PPT 2</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ppt2" data-max="10">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Quiz</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input quiz" data-max="10">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Quiz</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input quiz" data-max="10">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Project</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input project" data-max="20">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Project</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input project" data-max="20">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Practical</span><span class="field-max-badge">/ 25</span></div>
-          <input type="number" min="0" max="25" placeholder="0" class="grade-input practical" data-max="25">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Practical</span><span class="max-label">25</span></label>
+          <input type="number" min="0" max="25" placeholder="0" class="m-input practical" data-max="25">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Total Evaluated: <strong id="dti-total-summary">0 / 0 marks</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Course Weight: <strong>75 Marks Total</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Evaluated Score: <strong id="dti-sub-score">0 / 0</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="dti-fields-sub">0 / 5</strong></span>
       </div>
     </div>
 
     <!-- 7. CHSV -->
     <div class="subject-card" data-code="chsv" data-type="two" data-credits="2">
-      <div class="subject-card-header">
+      <div class="subject-header-row">
         <div class="subject-title-area">
-          <span class="eyebrow"><span class="eyebrow-dot"></span> Course 07</span>
-          <h4>CHSV (Constitution, Ethics & Human Values)</h4>
-          <div class="subject-tags-row">
-            <span class="credit-pill">2 Credits</span>
-            <span class="badge-status empty" id="chsv-badge-status">0 / 4 fields entered</span>
-          </div>
+          <h3>CHSV (Ethics & Human Values)</h3>
+          <span class="credit-tag">2 Credits · 75 Marks</span>
         </div>
-        <div class="subject-score-badge">
-          <div class="subject-gp-display" id="chsv-gp">0.00 GP</div>
-          <div class="subject-subgrade-text" id="chsv-subgrade">-- Grade</div>
+        <div class="subject-percentage-area">
+          <div class="subject-pct-big" id="chsv-pct">--%</div>
+          <div class="subject-score-raw" id="chsv-raw">0 / 0 marks</div>
         </div>
       </div>
-
-      <div class="flat-progress-track">
-        <div class="flat-progress-fill" id="chsv-progress-fill"></div>
-      </div>
-
-      <div class="fields-grid">
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 1</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci1" data-max="20">
-          <div class="field-cell-micro-status"></div>
+      <div class="inputs-grid">
+        <div class="input-box-wrapper">
+          <label><span>CI 1</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci1" data-max="20">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 2</span><span class="field-max-badge">/ 20</span></div>
-          <input type="number" min="0" max="20" placeholder="0" class="grade-input ci2" data-max="20">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 2</span><span class="max-label">20</span></label>
+          <input type="number" min="0" max="20" placeholder="0" class="m-input ci2" data-max="20">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>CI 3</span><span class="field-max-badge">/ 10</span></div>
-          <input type="number" min="0" max="10" placeholder="0" class="grade-input ci3" data-max="10">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>CI 3</span><span class="max-label">10</span></label>
+          <input type="number" min="0" max="10" placeholder="0" class="m-input ci3" data-max="10">
         </div>
-        <div class="field-cell">
-          <div class="field-cell-label"><span>Homework</span><span class="field-max-badge">/ 25</span></div>
-          <input type="number" min="0" max="25" placeholder="0" class="grade-input homework" data-max="25">
-          <div class="field-cell-micro-status"></div>
+        <div class="input-box-wrapper">
+          <label><span>Homework</span><span class="max-label">25</span></label>
+          <input type="number" min="0" max="25" placeholder="0" class="m-input homework" data-max="25">
         </div>
       </div>
-
-      <div class="subject-summary-checklist">
-        <div class="check-item"><span class="check-mark">✓</span> Total Evaluated: <strong id="chsv-total-summary">0 / 0 marks</strong></div>
-        <div class="check-item" style="margin-left:auto;"><span class="check-mark">●</span> Course Weight: <strong>75 Marks Total</strong></div>
+      <div class="subject-footer-breakdown">
+        <span>Evaluated Score: <strong id="chsv-sub-score">0 / 0</strong></span>
+        <span>·</span>
+        <span>Components logged: <strong id="chsv-fields-sub">0 / 4</strong></span>
       </div>
     </div>
 
   </div>
 
-  <!-- Academic Grading Scale & Scheme Reference (Paper Surface) -->
-  <section class="reference-card-paper" id="referenceSection">
-    <span class="eyebrow"><span class="eyebrow-dot"></span> Academic Reference Standard</span>
-    <h3 class="section-heading-serif" style="margin: 8px 0 16px;">SPPU & AIT Pune Grading Standard</h3>
-    <p style="font-size: 14px; color: var(--color-slate); margin-bottom: 20px;">
-      Grade points are determined according to percentage scored on included components. In 4-credit courses, theory accounts for 3 credits (75%) and practical accounts for 1 credit (25%).
-    </p>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-      <div>
-        <h4 style="font-family: var(--font-serif); font-size: 17px; margin-bottom: 8px;">Grade Conversion Table</h4>
-        <table class="table-clean">
-          <thead>
-            <tr>
-              <th>Percentage Range</th>
-              <th>Letter</th>
-              <th>Grade Point</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>90% – 100%</td><td><strong style="color:var(--color-deep-teal);">O</strong></td><td>10.0</td></tr>
-            <tr><td>80% – 89.9%</td><td><strong style="color:var(--color-lake-teal);">A+</strong></td><td>9.0</td></tr>
-            <tr><td>70% – 79.9%</td><td><strong style="color:var(--color-ink-navy);">A</strong></td><td>8.0</td></tr>
-            <tr><td>60% – 69.9%</td><td><strong style="color:var(--color-sage);">B+</strong></td><td>7.0</td></tr>
-            <tr><td>50% – 59.9%</td><td><strong>B</strong></td><td>6.0</td></tr>
-            <tr><td>40% – 49.9%</td><td><strong>C / P</strong></td><td>5.0</td></tr>
-            <tr><td>Below 40%</td><td><strong style="color:var(--color-dusty-rose);">F</strong></td><td>0.0</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div>
-        <h4 style="font-family: var(--font-serif); font-size: 17px; margin-bottom: 8px;">Semester 1 Structure (700 Marks)</h4>
-        <table class="table-clean">
-          <thead>
-            <tr>
-              <th>Course</th>
-              <th>Credits</th>
-              <th>Marks</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Engineering Mathematics</td><td>4</td><td>125</td></tr>
-            <tr><td>PST (Problem Solving Tech.)</td><td>4</td><td>125</td></tr>
-            <tr><td>Applied Science (Chemistry)</td><td>4</td><td>125</td></tr>
-            <tr><td>BMAC</td><td>4</td><td>125</td></tr>
-            <tr><td>IKS</td><td>2</td><td>50</td></tr>
-            <tr><td>DTI</td><td>2</td><td>75</td></tr>
-            <tr><td>CHSV</td><td>2</td><td>75</td></tr>
-            <tr style="font-weight:600; background-color:var(--surface-page);">
-              <td>Total Scheme</td><td>22 Credits</td><td>700 Marks</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="app-footer">
-    <p>AIT Pune Semester 1 Academic Tool · Designed following Research Notes editorial guidelines.</p>
-    <p style="margin-top: 6px;">Data is maintained locally in your browser session. Repository on <a href="https://github.com/snehil069/calculator" target="_blank" rel="noopener">GitHub (snehil069/calculator)</a>.</p>
-  </footer>
+  <!-- Clean Assessment Reference Table -->
+  <div class="reference-card">
+    <span class="eyebrow"><span class="eyebrow-dot"></span> Academic Structure</span>
+    <h3>Semester 1 Scheme (22 Credits · 700 Total Marks)</h3>
+    <table class="clean-table">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Credits</th>
+          <th>Assessment Structure</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Engineering Mathematics</td><td>4</td><td>Theory 100 (CI-1:20, CI-2:20, CI-3:10, EndSem:50) + Practical 25</td><td>125</td></tr>
+        <tr><td>PST (Problem Solving Tech.)</td><td>4</td><td>Theory 100 (CI-1:20, CI-2:20, CI-3:10, EndSem:50) + Practical 25</td><td>125</td></tr>
+        <tr><td>Applied Science (Chemistry)</td><td>4</td><td>Theory 100 (CI-1:20, CI-2:20, CI-3:10, EndSem:50) + Practical 25</td><td>125</td></tr>
+        <tr><td>BMAC</td><td>4</td><td>Theory 100 (CI-1:20, CI-2:20, CI-3:10, EndSem:50) + Practical 25</td><td>125</td></tr>
+        <tr><td>IKS</td><td>2</td><td>Continuous Assessment (CI-1:20, CI-2:20, CI-3:10)</td><td>50</td></tr>
+        <tr><td>DTI</td><td>2</td><td>PPT-1 (10) + PPT-2 (10) + Quiz (10) + Project (20) + Practical (25)</td><td>75</td></tr>
+        <tr><td>CHSV</td><td>2</td><td>Continuous Assessment (CI-1:20, CI-2:20, CI-3:10) + Homework (25)</td><td>75</td></tr>
+        <tr style="font-weight:600; background-color:var(--color-paper-white);">
+          <td>Total (7 Courses)</td><td>22 Credits</td><td>Theory 550 + Practical/Homework 150</td><td>700 Marks</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 </div>
 
-<!-- Inked Toast Notification -->
-<div class="toast-notice" id="toastNotice">
-  <span id="toastNoticeText">Evaluation updated</span>
-</div>
+<!-- Minimal Toast -->
+<div class="toast" id="toast">Marks updated</div>
 
 <script>
-// Evaluation Mode State
-let evaluationMode = 'progressive'; // 'progressive' (only entered fields) or 'strict' (unfilled = 0)
-
-// Grade Standard Function
-function getGradeInfo(percentage) {
-  if (isNaN(percentage) || percentage === null) {
-    return { gp: 0, letter: '--', desc: 'No evaluations logged' };
-  }
-  if (percentage >= 90) return { gp: 10, letter: 'O', desc: 'Outstanding performance' };
-  if (percentage >= 80) return { gp: 9, letter: 'A+', desc: 'Excellent performance' };
-  if (percentage >= 70) return { gp: 8, letter: 'A', desc: 'Very good performance' };
-  if (percentage >= 60) return { gp: 7, letter: 'B+', desc: 'Good standing' };
-  if (percentage >= 50) return { gp: 6, letter: 'B', desc: 'Above average' };
-  if (percentage >= 40) return { gp: 5, letter: 'C', desc: 'Pass standard' };
-  return { gp: 0, letter: 'F', desc: 'Requires improvement / Below pass' };
+// SPPU / AIT 10-Point Grade Conversion
+function getGradePoint(percentage) {
+  if (isNaN(percentage) || percentage === null) return 0;
+  if (percentage >= 90) return 10.0;
+  if (percentage >= 80) return 9.0;
+  if (percentage >= 70) return 8.0;
+  if (percentage >= 60) return 7.0;
+  if (percentage >= 50) return 6.0;
+  if (percentage >= 40) return 5.0;
+  return 0.0;
 }
 
-// Mode Selector
-function setEvaluationMode(mode) {
-  evaluationMode = mode;
-  document.getElementById('modeBtnProgressive').classList.toggle('active', mode === 'progressive');
-  document.getElementById('modeBtnStrict').classList.toggle('active', mode === 'strict');
-  calculate();
-  showToast(mode === 'progressive' ? 'Progressive Mode: Evaluating out of completed fields' : 'Strict Mode: Unfilled components counted as 0');
-}
-
-// Toast
-function showToast(msg) {
-  const toast = document.getElementById('toastNotice');
-  document.getElementById('toastNoticeText').textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2400);
-}
-
-function scrollToReference() {
-  document.getElementById('referenceSection').scrollIntoView({ behavior: 'smooth' });
+function showToast(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 // Core Calculation Logic
@@ -1556,14 +876,13 @@ function calculate() {
   const cards = document.querySelectorAll('.subject-card');
 
   let totalWeightedGP = 0;
-  let evaluatedCreditsSum = 0;
-  const totalCreditsPossible = 22;
+  let evaluatedCredits = 0;
+  const totalSemCredits = 22;
 
   let totalMarksScored = 0;
   let totalMarksEvaluated = 0;
-  const totalSemPossibleMarks = 700;
 
-  let activeSubjectsCount = 0;
+  let activeCourses = 0;
   let totalFieldsFilled = 0;
   let totalFieldsCount = 0;
 
@@ -1571,83 +890,61 @@ function calculate() {
     const code = card.dataset.code;
     const type = card.dataset.type;
     const credits = parseFloat(card.dataset.credits) || 0;
-
-    const inputs = Array.from(card.querySelectorAll('.grade-input'));
+    const inputs = Array.from(card.querySelectorAll('.m-input'));
     totalFieldsCount += inputs.length;
 
-    let subjectFilledFields = 0;
-    let subjectScored = 0;
-    let subjectMaxEvaluated = 0;
+    let filledCount = 0;
+    let scoredSum = 0;
+    let evaluatedMax = 0;
 
     if (type === 'four') {
-      // 4-Credit Subject: 100 Theory (3 credits) + 25 Practical (1 credit)
       let theoryScored = 0;
-      let theoryMaxEvaluated = 0;
+      let theoryMax = 0;
       let practicalScored = 0;
-      let practicalMaxEvaluated = 0;
+      let practicalMax = 0;
 
       inputs.forEach(input => {
         const max = parseFloat(input.dataset.max) || 0;
         const group = input.dataset.group;
         const raw = input.value.trim();
-        const microStatus = input.closest('.field-cell').querySelector('.field-cell-micro-status');
 
         if (raw !== '') {
           const val = parseFloat(raw) || 0;
-          subjectFilledFields++;
+          filledCount++;
           totalFieldsFilled++;
-          input.classList.add('has-value');
-
-          const pct = max > 0 ? ((val / max) * 100).toFixed(0) : 0;
-          if (microStatus) microStatus.textContent = `${pct}%`;
+          input.classList.add('has-val');
 
           if (group === 'theory') {
             theoryScored += val;
-            theoryMaxEvaluated += max;
+            theoryMax += max;
           } else if (group === 'practical') {
             practicalScored += val;
-            practicalMaxEvaluated += max;
+            practicalMax += max;
           }
         } else {
-          input.classList.remove('has-value');
-          if (microStatus) microStatus.textContent = '';
-
-          if (evaluationMode === 'strict') {
-            if (group === 'theory') theoryMaxEvaluated += max;
-            if (group === 'practical') practicalMaxEvaluated += max;
-          }
+          input.classList.remove('has-val');
         }
       });
 
-      const hasMarks = subjectFilledFields > 0;
-      card.classList.toggle('has-data', hasMarks);
+      scoredSum = theoryScored + practicalScored;
+      evaluatedMax = theoryMax + practicalMax;
 
       let subjectGP = 0;
-      let subjectPercentage = 0;
+      let subjectPct = 0;
 
-      if (hasMarks || evaluationMode === 'strict') {
-        activeSubjectsCount++;
-        evaluatedCreditsSum += credits;
+      if (filledCount > 0) {
+        activeCourses++;
+        evaluatedCredits += credits;
+        totalMarksScored += scoredSum;
+        totalMarksEvaluated += evaluatedMax;
 
-        subjectScored = theoryScored + practicalScored;
-        subjectMaxEvaluated = theoryMaxEvaluated + practicalMaxEvaluated;
+        const hasTheory = theoryMax > 0;
+        const hasPractical = practicalMax > 0;
 
-        totalMarksScored += subjectScored;
-        totalMarksEvaluated += subjectMaxEvaluated;
+        let theoryGP = hasTheory ? getGradePoint((theoryScored / theoryMax) * 100) : 0;
+        let practicalGP = hasPractical ? getGradePoint((practicalScored / practicalMax) * 100) : 0;
 
         // Weighting: Theory = 3 credits, Practical = 1 credit
-        let theoryGP = 0;
-        let practicalGP = 0;
-        const hasTheory = theoryMaxEvaluated > 0;
-        const hasPractical = practicalMaxEvaluated > 0;
-
-        if (hasTheory) {
-          theoryGP = getGradeInfo((theoryScored / theoryMaxEvaluated) * 100).gp;
-        }
-        if (hasPractical) {
-          practicalGP = getGradeInfo((practicalScored / practicalMaxEvaluated) * 100).gp;
-        }
-
         if (hasTheory && hasPractical) {
           subjectGP = (theoryGP * 3 + practicalGP * 1) / 4;
         } else if (hasTheory) {
@@ -1656,183 +953,101 @@ function calculate() {
           subjectGP = practicalGP;
         }
 
-        if (subjectMaxEvaluated > 0) {
-          subjectPercentage = (subjectScored / subjectMaxEvaluated) * 100;
-        }
-
+        subjectPct = (scoredSum / evaluatedMax) * 100;
         totalWeightedGP += (subjectGP * credits);
       }
 
-      // Update UI for 4-credit course
-      const grade = getGradeInfo(subjectPercentage);
-      const isCardActive = hasMarks || evaluationMode === 'strict';
+      // Display ONLY percentage for this subject (NO GP)
+      document.getElementById(`${code}-pct`).textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
+      document.getElementById(`${code}-raw`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} marks` : '0 / 0 marks';
 
-      document.getElementById(`${code}-gp`).textContent = isCardActive ? `${subjectGP.toFixed(2)} GP` : '0.00 GP';
-      document.getElementById(`${code}-subgrade`).textContent = isCardActive ? `${grade.letter} · ${subjectPercentage.toFixed(1)}%` : '-- Grade';
-      document.getElementById(`${code}-progress-fill`).style.width = isCardActive ? `${Math.min(100, subjectPercentage)}%` : '0%';
-
-      // Checklist values
-      document.getElementById(`${code}-theory-summary`).textContent = theoryMaxEvaluated > 0
-        ? `${theoryScored} / ${theoryMaxEvaluated} (${((theoryScored/theoryMaxEvaluated)*100).toFixed(0)}%)`
-        : (evaluationMode === 'strict' ? '0 / 100' : 'Not started (100 marks)');
-
-      document.getElementById(`${code}-practical-summary`).textContent = practicalMaxEvaluated > 0
-        ? `${practicalScored} / ${practicalMaxEvaluated} (${((practicalScored/practicalMaxEvaluated)*100).toFixed(0)}%)`
-        : (evaluationMode === 'strict' ? '0 / 25' : 'Pending (25 marks)');
-
-      document.getElementById(`${code}-total-summary`).textContent = `${subjectScored} / ${subjectMaxEvaluated} marks`;
-
-      const badge = document.getElementById(`${code}-badge-status`);
-      badge.textContent = `${subjectFilledFields} / 5 fields entered`;
-      badge.className = `badge-status ${subjectFilledFields > 0 ? 'active' : 'empty'}`;
+      document.getElementById(`${code}-theory-sub`).textContent = theoryMax > 0 
+        ? `${theoryScored} / ${theoryMax} (${((theoryScored/theoryMax)*100).toFixed(0)}%)` 
+        : '--';
+      document.getElementById(`${code}-practical-sub`).textContent = practicalMax > 0 
+        ? `${practicalScored} / ${practicalMax} (${((practicalScored/practicalMax)*100).toFixed(0)}%)` 
+        : '--';
+      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / 5`;
 
     } else {
       // 2-Credit Subjects (IKS: 50, DTI: 75, CHSV: 75)
       inputs.forEach(input => {
         const max = parseFloat(input.dataset.max) || 0;
         const raw = input.value.trim();
-        const microStatus = input.closest('.field-cell').querySelector('.field-cell-micro-status');
 
         if (raw !== '') {
           const val = parseFloat(raw) || 0;
-          subjectFilledFields++;
+          filledCount++;
           totalFieldsFilled++;
-          input.classList.add('has-value');
+          input.classList.add('has-val');
 
-          const pct = max > 0 ? ((val / max) * 100).toFixed(0) : 0;
-          if (microStatus) microStatus.textContent = `${pct}%`;
-
-          subjectScored += val;
-          subjectMaxEvaluated += max;
+          scoredSum += val;
+          evaluatedMax += max;
         } else {
-          input.classList.remove('has-value');
-          if (microStatus) microStatus.textContent = '';
-          if (evaluationMode === 'strict') {
-            subjectMaxEvaluated += max;
-          }
+          input.classList.remove('has-val');
         }
       });
 
-      const hasMarks = subjectFilledFields > 0;
-      card.classList.toggle('has-data', hasMarks);
-
       let subjectGP = 0;
-      let subjectPercentage = 0;
+      let subjectPct = 0;
 
-      if (hasMarks || evaluationMode === 'strict') {
-        activeSubjectsCount++;
-        evaluatedCreditsSum += credits;
+      if (filledCount > 0) {
+        activeCourses++;
+        evaluatedCredits += credits;
+        totalMarksScored += scoredSum;
+        totalMarksEvaluated += evaluatedMax;
 
-        totalMarksScored += subjectScored;
-        totalMarksEvaluated += subjectMaxEvaluated;
-
-        if (subjectMaxEvaluated > 0) {
-          subjectPercentage = (subjectScored / subjectMaxEvaluated) * 100;
-          subjectGP = getGradeInfo(subjectPercentage).gp;
-        }
-
+        subjectPct = (scoredSum / evaluatedMax) * 100;
+        subjectGP = getGradePoint(subjectPct);
         totalWeightedGP += (subjectGP * credits);
       }
 
-      // Update UI for 2-credit course
-      const grade = getGradeInfo(subjectPercentage);
-      const isCardActive = hasMarks || evaluationMode === 'strict';
-
-      document.getElementById(`${code}-gp`).textContent = isCardActive ? `${subjectGP.toFixed(2)} GP` : '0.00 GP';
-      document.getElementById(`${code}-subgrade`).textContent = isCardActive ? `${grade.letter} · ${subjectPercentage.toFixed(1)}%` : '-- Grade';
-      document.getElementById(`${code}-progress-fill`).style.width = isCardActive ? `${Math.min(100, subjectPercentage)}%` : '0%';
-      document.getElementById(`${code}-total-summary`).textContent = `${subjectScored} / ${subjectMaxEvaluated} marks`;
-
-      const badge = document.getElementById(`${code}-badge-status`);
-      badge.textContent = `${subjectFilledFields} / ${inputs.length} fields entered`;
-      badge.className = `badge-status ${subjectFilledFields > 0 ? 'active' : 'empty'}`;
+      // Display ONLY percentage for this subject (NO GP)
+      document.getElementById(`${code}-pct`).textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
+      document.getElementById(`${code}-raw`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} marks` : '0 / 0 marks';
+      document.getElementById(`${code}-sub-score`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} (${subjectPct.toFixed(0)}%)` : '0 / 0';
+      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / ${inputs.length}`;
     }
   });
 
-  // Overall SGPA
+  // Calculate Overall Semester SGPA
   let semSGPA = 0;
-  if (evaluatedCreditsSum > 0) {
-    semSGPA = totalWeightedGP / evaluatedCreditsSum;
+  if (evaluatedCredits > 0) {
+    semSGPA = totalWeightedGP / evaluatedCredits;
   }
 
-  // Dashboard Panel Updates
-  document.getElementById('heroSgpaDisplay').textContent = semSGPA.toFixed(2);
-  const overallGrade = getGradeInfo(evaluatedCreditsSum > 0 ? semSGPA * 10 : null);
-  document.getElementById('heroGradeLetter').textContent = evaluatedCreditsSum > 0 ? overallGrade.letter : '--';
-  document.getElementById('heroGradeDesc').textContent = evaluatedCreditsSum > 0 ? overallGrade.desc : 'Awaiting input. Enter marks below to begin journal calculation.';
+  // Update Top Dashboard
+  document.getElementById('sgpaDisplay').textContent = semSGPA.toFixed(2);
+  document.getElementById('evaluatedCreditsText').textContent = `${evaluatedCredits} / ${totalSemCredits} Credits Evaluated`;
 
-  document.getElementById('activeCreditsBadge').textContent = `${evaluatedCreditsSum} / ${totalCreditsPossible} Credits Active`;
-  document.getElementById('heroMarksEvaluated').textContent = `${totalMarksScored} / ${totalMarksEvaluated} marks`;
-  const pctOverall = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
-  document.getElementById('heroMarksPct').textContent = `${pctOverall}% average across included`;
-  document.getElementById('heroActiveCourses').textContent = `${activeSubjectsCount} of 7 courses logged`;
-  document.getElementById('heroOverallTermProgress').textContent = `${totalMarksScored} scored out of 700 term marks`;
-
-  document.getElementById('bannerFieldsDone').textContent = `${totalFieldsFilled} / ${totalFieldsCount}`;
-
-  // Max Potential Calculation
-  const remainingCredits = totalCreditsPossible - evaluatedCreditsSum;
-  let maxPotential = 10.0;
-  if (evaluatedCreditsSum > 0) {
-    maxPotential = (totalWeightedGP + (remainingCredits * 10.0)) / totalCreditsPossible;
-  }
-  document.getElementById('maxPotentialVal').textContent = maxPotential.toFixed(2);
-  const remainingMarks = totalSemPossibleMarks - totalMarksEvaluated;
-  document.getElementById('remainingMarksVal').textContent = `${Math.max(0, remainingMarks)} marks pending`;
-
-  // Forecaster Calculation
-  calculateForecaster(semSGPA, evaluatedCreditsSum, totalCreditsPossible, remainingMarks);
+  const overallPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
+  document.getElementById('overallPctDisplay').textContent = `${overallPct}%`;
+  document.getElementById('evaluatedMarksDisplay').textContent = `${totalMarksScored} / ${totalMarksEvaluated}`;
+  document.getElementById('activeCoursesDisplay').textContent = `${activeCourses} / 7`;
+  document.getElementById('fieldsDoneSub').textContent = `${totalFieldsFilled} of ${totalFieldsCount} fields logged`;
 
   // Auto-save
-  saveState();
+  saveData();
 }
 
-// Target Forecaster
-function calculateForecaster(currentSGPA, evaluatedCredits, totalCredits, remainingMarks) {
-  const goalInput = document.getElementById('goalSgpaInput');
-  const outputBox = document.getElementById('forecastOutputBox');
-  const target = parseFloat(goalInput.value) || 9.0;
-
-  const remainingCredits = totalCredits - evaluatedCredits;
-
-  if (remainingCredits <= 0 || remainingMarks <= 0) {
-    outputBox.innerHTML = `All components completed. Final evaluated SGPA: <strong>${currentSGPA.toFixed(2)}</strong>`;
-    return;
-  }
-
-  const currentPoints = currentSGPA * evaluatedCredits;
-  const targetPoints = target * totalCredits;
-  const neededPoints = targetPoints - currentPoints;
-  const neededGP = neededPoints / remainingCredits;
-
-  if (neededGP <= 0) {
-    outputBox.innerHTML = `Your target of <strong>${target.toFixed(1)}</strong> is already secured with current evaluated performance!`;
-  } else if (neededGP > 10.0) {
-    outputBox.innerHTML = `Target <strong>${target.toFixed(1)}</strong> is mathematically unreachable (requires > 10.0 GP in remaining exams).`;
-  } else {
-    const approxPct = neededGP * 10;
-    outputBox.innerHTML = `To finish with <strong>${target.toFixed(2)} SGPA</strong>, you need an average of <strong>${neededGP.toFixed(2)} GP (~${approxPct.toFixed(0)}%)</strong> across your remaining <strong>${remainingMarks} marks</strong>.`;
-  }
-}
-
-// Local Storage
-function saveState() {
+// LocalStorage helpers
+function saveData() {
   const data = {};
-  document.querySelectorAll('.grade-input').forEach((input, i) => {
-    if (input.value.trim() !== '') data[i] = input.value;
+  document.querySelectorAll('.m-input').forEach((input, idx) => {
+    if (input.value.trim() !== '') data[idx] = input.value;
   });
-  localStorage.setItem('ait_journal_marks', JSON.stringify(data));
+  localStorage.setItem('ait_marks_clean', JSON.stringify(data));
 }
 
-function loadState() {
-  const saved = localStorage.getItem('ait_journal_marks');
+function loadData() {
+  const saved = localStorage.getItem('ait_marks_clean');
   if (!saved) {
     calculate();
     return;
   }
   try {
     const data = JSON.parse(saved);
-    const inputs = document.querySelectorAll('.grade-input');
+    const inputs = document.querySelectorAll('.m-input');
     Object.keys(data).forEach(idx => {
       if (inputs[idx]) inputs[idx].value = data[idx];
     });
@@ -1843,54 +1058,64 @@ function loadState() {
 }
 
 // Reset
-function resetAllMarks() {
-  if (!confirm('Clear all entered marks from the journal?')) return;
-  document.querySelectorAll('.grade-input').forEach(input => {
+function resetCalculator() {
+  if (!confirm('Clear all entered marks?')) return;
+  document.querySelectorAll('.m-input').forEach(input => {
     input.value = '';
-    input.classList.remove('has-value');
+    input.classList.remove('has-val');
   });
-  localStorage.removeItem('ait_journal_marks');
+  localStorage.removeItem('ait_marks_clean');
   calculate();
-  showToast('All journal records cleared');
+  showToast('All marks cleared');
 }
 
-// Fill Realistic Sample Data
-function fillRealisticSample() {
-  const sample = [
-    // Maths (4cr): CI1=18, CI2=19, CI3=9, EndSem=empty, Practical=22
+// Load realistic sample
+function fillSample() {
+  const demo = [
+    // Maths: CI1=18, CI2=19, CI3=9, EndSem=empty, Practical=22
     '18', '19', '9', '', '22',
-    // PST (4cr): CI1=17, CI2=18, CI3=8, EndSem=empty, Practical=21
+    // PST: CI1=17, CI2=18, CI3=8, EndSem=empty, Practical=21
     '17', '18', '8', '', '21',
-    // Chemistry (4cr): CI1=19, CI2=17, CI3=9, EndSem=empty, Practical=23
+    // Chemistry: CI1=19, CI2=17, CI3=9, EndSem=empty, Practical=23
     '19', '17', '9', '', '23',
-    // BMAC (4cr): CI1=16, CI2=18, CI3=8, EndSem=empty, Practical=20
+    // BMAC: CI1=16, CI2=18, CI3=8, EndSem=empty, Practical=20
     '16', '18', '8', '', '20',
-    // IKS (2cr): CI1=18, CI2=19, CI3=9
+    // IKS: CI1=18, CI2=19, CI3=9
     '18', '19', '9',
-    // DTI (2cr): PPT1=9, PPT2=9, Quiz=8, Project=18, Practical=23
+    // DTI: PPT1=9, PPT2=9, Quiz=8, Project=18, Practical=23
     '9', '9', '8', '18', '23',
-    // CHSV (2cr): CI1=18, CI2=19, CI3=8, Homework=22
+    // CHSV: CI1=18, CI2=19, CI3=8, Homework=22
     '18', '19', '8', '22'
   ];
 
-  const inputs = document.querySelectorAll('.grade-input');
+  const inputs = document.querySelectorAll('.m-input');
   inputs.forEach((input, i) => {
-    input.value = sample[i] || '';
+    input.value = demo[i] || '';
   });
   calculate();
-  showToast('Loaded mid-semester field research notes!');
+  showToast('Sample marks loaded');
 }
 
-// Input Event Listeners
+// Initialize and attach non-wheel listeners
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.grade-input').forEach(input => {
+  const inputs = document.querySelectorAll('.m-input');
+
+  inputs.forEach(input => {
+    // 1. COMPLETELY DISABLE MOUSE WHEEL SCROLLING ON NUMBER INPUTS
+    input.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      // Unfocus input if user is scrolling the page so scroll passes naturally
+      this.blur();
+    }, { passive: false });
+
+    // 2. ONLY KEYBOARD INPUT WITH VALUE CLAMPING
     input.addEventListener('input', function() {
       const max = parseFloat(this.dataset.max) || 100;
       const val = parseFloat(this.value);
 
       if (val > max) {
         this.value = max;
-        showToast(`Maximum marks for this field is ${max}`);
+        showToast(`Max marks is ${max}`);
       } else if (val < 0) {
         this.value = 0;
       }
@@ -1898,7 +1123,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  loadState();
+  // Global listener to prevent accidental number increment on page scroll
+  window.addEventListener('wheel', function(e) {
+    if (document.activeElement && document.activeElement.type === 'number') {
+      document.activeElement.blur();
+    }
+  }, { passive: true });
+
+  loadData();
 });
 </script>
 
