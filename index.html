@@ -43,8 +43,8 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #0b1524;
-  background-image: url('bg.jpg');
+  background-color: #050505;
+  background-image: url('bg.png');
   background-size: cover;
   background-position: center bottom;
   background-attachment: scroll;
@@ -1427,10 +1427,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputs = document.querySelectorAll('.m-input');
 
   inputs.forEach(input => {
-    // 1. Prevent mouse scroll wheel from changing numbers inside textbox
-    input.addEventListener('wheel', function(e) {
-      e.preventDefault();
-    }, { passive: false });
+    // 1. Prevent mouse scroll wheel from changing numbers inside textbox smoothly without blocking scroll thread
+    input.addEventListener('wheel', function() {
+      this.blur();
+    });
 
     // 2. Immediate keyboard input calculation with strict validation
     input.addEventListener('input', function() {
