@@ -846,16 +846,63 @@ header.page-header {
     </table>
   </div>
 
+  <!-- SPPU 10-Point Grade Scale Reference Table -->
+  <div class="reference-card" style="margin-top: 20px;">
+    <span class="eyebrow"><span class="eyebrow-dot"></span> Official SPPU 10-Point Scale</span>
+    <h3>Marks-to-Grade Point Pipeline</h3>
+    <table class="clean-table">
+      <thead>
+        <tr>
+          <th>Percentage Range</th>
+          <th>Letter Grade</th>
+          <th>Grade Point ($G_i$)</th>
+          <th>Performance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>80% – 100%</strong></td><td><strong style="color:var(--color-deep-teal);">O</strong></td><td><strong>10</strong></td><td>Outstanding</td></tr>
+        <tr><td><strong>70% – 79.99%</strong></td><td><strong style="color:var(--color-lake-teal);">A+</strong></td><td><strong>9</strong></td><td>Excellent</td></tr>
+        <tr><td><strong>60% – 69.99%</strong></td><td><strong style="color:var(--color-pine-shadow);">A</strong></td><td><strong>8</strong></td><td>Very Good</td></tr>
+        <tr><td><strong>55% – 59.99%</strong></td><td><strong style="color:var(--color-sage);">B+</strong></td><td><strong>7</strong></td><td>Good</td></tr>
+        <tr><td><strong>50% – 54.99%</strong></td><td><strong>B</strong></td><td><strong>6</strong></td><td>Above Average</td></tr>
+        <tr><td><strong>45% – 49.99%</strong></td><td><strong>C</strong></td><td><strong>5</strong></td><td>Average</td></tr>
+        <tr><td><strong>40% – 44.99%</strong></td><td><strong>P</strong></td><td><strong>4</strong></td><td>Pass</td></tr>
+        <tr><td><strong>Below 40%</strong></td><td><strong style="color:#c53030;">F</strong></td><td><strong>0</strong></td><td>Fail</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 12px; color: var(--color-slate); margin-top: 10px;">
+      Formula: $\text{SGPA} = \frac{\sum (\text{credits}_i \times G_i)}{\sum \text{credits}_i}$. In 4-credit courses, theory is weighted 3 credits and practical is weighted 1 credit.
+    </p>
+  </div>
+
 </div>
 
 <!-- Minimal Toast -->
 <div class="toast" id="toast">Marks updated</div>
 
 <script>
-// Exact Continuous Grade Point (Percentage / 10)
-function getExactGradePoint(percentage) {
-  if (isNaN(percentage) || percentage === null || percentage <= 0) return 0;
-  return percentage / 10;
+// Official SPPU 10-Point Grade Point Mapping
+function getGradePoint(percentage) {
+  if (isNaN(percentage) || percentage === null) return 0;
+  if (percentage >= 80) return 10;
+  if (percentage >= 70) return 9;
+  if (percentage >= 60) return 8;
+  if (percentage >= 55) return 7;
+  if (percentage >= 50) return 6;
+  if (percentage >= 45) return 5;
+  if (percentage >= 40) return 4;
+  return 0; // Below 40% is Fail (0)
+}
+
+function getGradeLetter(gp) {
+  if (gp >= 10) return 'O';
+  if (gp >= 9) return 'A+';
+  if (gp >= 8) return 'A';
+  if (gp >= 7) return 'B+';
+  if (gp >= 6) return 'B';
+  if (gp >= 5) return 'C';
+  if (gp >= 4) return 'P';
+  return 'F';
 }
 
 function showToast(text) {
@@ -928,7 +975,6 @@ function calculate() {
 
       if (filledCount > 0) {
         activeCourses++;
-        evaluatedCredits += credits;
         totalMarksScored += scoredSum;
         totalMarksEvaluated += evaluatedMax;
 
@@ -938,33 +984,42 @@ function calculate() {
         let theoryPct = hasTheory ? (theoryScored / theoryMax) * 100 : 0;
         let practicalPct = hasPractical ? (practicalScored / practicalMax) * 100 : 0;
 
-        let theoryGP = theoryPct / 10;
-        let practicalGP = practicalPct / 10;
+        let theoryGP = hasTheory ? getGradePoint(theoryPct) : 0;
+        let practicalGP = hasPractical ? getGradePoint(practicalPct) : 0;
+
+        let subjectCredits = 0;
+        let subjectCreditPoints = 0;
 
         // Weighting: Theory = 3 credits, Practical = 1 credit
         if (hasTheory && hasPractical) {
-          subjectGP = (theoryGP * 3 + practicalGP * 1) / 4;
+          subjectCreditPoints = (theoryGP * 3) + (practicalGP * 1);
+          subjectCredits = 4;
         } else if (hasTheory) {
-          subjectGP = theoryGP;
+          subjectCreditPoints = (theoryGP * 3);
+          subjectCredits = 3;
         } else if (hasPractical) {
-          subjectGP = practicalGP;
+          subjectCreditPoints = (practicalGP * 1);
+          subjectCredits = 1;
         }
 
+        subjectGP = subjectCredits > 0 ? (subjectCreditPoints / subjectCredits) : 0;
         subjectPct = (scoredSum / evaluatedMax) * 100;
-        totalWeightedGP += (subjectGP * credits);
+
+        totalWeightedGP += subjectCreditPoints;
+        evaluatedCredits += subjectCredits;
       }
 
-      // Display ONLY percentage for this subject (NO GP)
+      // Display percentage for this subject
       document.getElementById(`${code}-pct`).textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
       document.getElementById(`${code}-raw`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} marks` : '0 / 0 marks';
 
       document.getElementById(`${code}-theory-sub`).textContent = theoryMax > 0 
-        ? `${theoryScored} / ${theoryMax} (${((theoryScored/theoryMax)*100).toFixed(0)}%)` 
+        ? `${theoryScored} / ${theoryMax} (${theoryPct.toFixed(0)}% → ${theoryGP} GP)` 
         : '--';
       document.getElementById(`${code}-practical-sub`).textContent = practicalMax > 0 
-        ? `${practicalScored} / ${practicalMax} (${((practicalScored/practicalMax)*100).toFixed(0)}%)` 
+        ? `${practicalScored} / ${practicalMax} (${practicalPct.toFixed(0)}% → ${practicalGP} GP)` 
         : '--';
-      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / 5`;
+      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / 5 fields`;
 
     } else {
       // 2-Credit Subjects (IKS: 50, DTI: 75, CHSV: 75)
@@ -990,24 +1045,29 @@ function calculate() {
 
       if (filledCount > 0) {
         activeCourses++;
-        evaluatedCredits += credits;
         totalMarksScored += scoredSum;
         totalMarksEvaluated += evaluatedMax;
 
         subjectPct = (scoredSum / evaluatedMax) * 100;
-        subjectGP = subjectPct / 10;
-        totalWeightedGP += (subjectGP * credits);
+        subjectGP = getGradePoint(subjectPct);
+        const subjectCreditPoints = subjectGP * 2;
+        const subjectCredits = 2;
+
+        totalWeightedGP += subjectCreditPoints;
+        evaluatedCredits += subjectCredits;
       }
 
-      // Display ONLY percentage for this subject (NO GP)
+      // Display percentage for this subject
       document.getElementById(`${code}-pct`).textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
       document.getElementById(`${code}-raw`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} marks` : '0 / 0 marks';
-      document.getElementById(`${code}-sub-score`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} (${subjectPct.toFixed(0)}%)` : '0 / 0';
-      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / ${inputs.length}`;
+      document.getElementById(`${code}-sub-score`).textContent = filledCount > 0 
+        ? `${scoredSum} / ${evaluatedMax} (${subjectPct.toFixed(1)}% → ${subjectGP} GP · ${getGradeLetter(subjectGP)})` 
+        : '0 / 0';
+      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / ${inputs.length} fields`;
     }
   });
 
-  // Calculate Overall Semester SGPA
+  // Calculate Overall Semester SGPA (Total Credit Points / Total Credits)
   let semSGPA = 0;
   if (evaluatedCredits > 0) {
     semSGPA = totalWeightedGP / evaluatedCredits;
@@ -1016,7 +1076,7 @@ function calculate() {
   // Update Top Dashboard
   document.getElementById('sgpaDisplay').textContent = semSGPA.toFixed(2);
   document.getElementById('evaluatedCreditsText').textContent = evaluatedCredits > 0
-    ? `${evaluatedCredits} / ${totalSemCredits} Credits · ${semSGPA.toFixed(3)} exact`
+    ? `${totalWeightedGP.toFixed(1)} Credit Points · ${evaluatedCredits} / ${totalSemCredits} Credits`
     : `0 / ${totalSemCredits} Credits Evaluated`;
 
   const overallPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
@@ -1071,20 +1131,20 @@ function resetCalculator() {
 // Load realistic sample
 function fillSample() {
   const demo = [
-    // Maths: CI1=18, CI2=19, CI3=9, EndSem=empty, Practical=22
-    '18', '19', '9', '', '22',
-    // PST: CI1=17, CI2=18, CI3=8, EndSem=empty, Practical=21
-    '17', '18', '8', '', '21',
-    // Chemistry: CI1=19, CI2=17, CI3=9, EndSem=empty, Practical=23
-    '19', '17', '9', '', '23',
-    // BMAC: CI1=16, CI2=18, CI3=8, EndSem=empty, Practical=20
-    '16', '18', '8', '', '20',
-    // IKS: CI1=18, CI2=19, CI3=9
-    '18', '19', '9',
-    // DTI: PPT1=9, PPT2=9, Quiz=8, Project=18, Practical=23
-    '9', '9', '8', '18', '23',
-    // CHSV: CI1=18, CI2=19, CI3=8, Homework=22
-    '18', '19', '8', '22'
+    // Maths: CIE1=18, CIE2=19, CIE3=9, EndSem=38, Practical=21 (10 GP)
+    '18', '19', '9', '38', '21',
+    // PST: CIE1=16, CIE2=17, CIE3=7, EndSem=34, Practical=19 (9 GP)
+    '16', '17', '7', '34', '19',
+    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=40, Practical=22 (10 GP)
+    '18', '17', '9', '40', '22',
+    // BMAC: CIE1=14, CIE2=15, CIE3=7, EndSem=31, Practical=18 (Theory 8 GP, Pract 9 GP)
+    '14', '15', '7', '31', '18',
+    // IKS: CIE1=17, CIE2=18, CIE3=8 (10 GP)
+    '17', '18', '8',
+    // DTI: PPT1=8, PPT2=8, Quiz=8, Project=15, Practical=19 (9 GP)
+    '8', '8', '8', '15', '19',
+    // CHSV: CIE1=15, CIE2=14, CIE3=7, Homework=18 (9 GP)
+    '15', '14', '7', '18'
   ];
 
   const inputs = document.querySelectorAll('.m-input');
@@ -1092,7 +1152,7 @@ function fillSample() {
     input.value = demo[i] || '';
   });
   calculate();
-  showToast('Sample marks loaded');
+  showToast('Realistic SPPU sample marks loaded');
 }
 
 // Initialize and attach non-wheel listeners
