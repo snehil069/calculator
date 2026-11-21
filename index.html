@@ -852,16 +852,10 @@ header.page-header {
 <div class="toast" id="toast">Marks updated</div>
 
 <script>
-// SPPU / AIT 10-Point Grade Conversion
-function getGradePoint(percentage) {
-  if (isNaN(percentage) || percentage === null) return 0;
-  if (percentage >= 90) return 10.0;
-  if (percentage >= 80) return 9.0;
-  if (percentage >= 70) return 8.0;
-  if (percentage >= 60) return 7.0;
-  if (percentage >= 50) return 6.0;
-  if (percentage >= 40) return 5.0;
-  return 0.0;
+// Exact Continuous Grade Point (Percentage / 10)
+function getExactGradePoint(percentage) {
+  if (isNaN(percentage) || percentage === null || percentage <= 0) return 0;
+  return percentage / 10;
 }
 
 function showToast(text) {
@@ -941,8 +935,11 @@ function calculate() {
         const hasTheory = theoryMax > 0;
         const hasPractical = practicalMax > 0;
 
-        let theoryGP = hasTheory ? getGradePoint((theoryScored / theoryMax) * 100) : 0;
-        let practicalGP = hasPractical ? getGradePoint((practicalScored / practicalMax) * 100) : 0;
+        let theoryPct = hasTheory ? (theoryScored / theoryMax) * 100 : 0;
+        let practicalPct = hasPractical ? (practicalScored / practicalMax) * 100 : 0;
+
+        let theoryGP = theoryPct / 10;
+        let practicalGP = practicalPct / 10;
 
         // Weighting: Theory = 3 credits, Practical = 1 credit
         if (hasTheory && hasPractical) {
@@ -998,7 +995,7 @@ function calculate() {
         totalMarksEvaluated += evaluatedMax;
 
         subjectPct = (scoredSum / evaluatedMax) * 100;
-        subjectGP = getGradePoint(subjectPct);
+        subjectGP = subjectPct / 10;
         totalWeightedGP += (subjectGP * credits);
       }
 
@@ -1018,7 +1015,9 @@ function calculate() {
 
   // Update Top Dashboard
   document.getElementById('sgpaDisplay').textContent = semSGPA.toFixed(2);
-  document.getElementById('evaluatedCreditsText').textContent = `${evaluatedCredits} / ${totalSemCredits} Credits Evaluated`;
+  document.getElementById('evaluatedCreditsText').textContent = evaluatedCredits > 0
+    ? `${evaluatedCredits} / ${totalSemCredits} Credits · ${semSGPA.toFixed(3)} exact`
+    : `0 / ${totalSemCredits} Credits Evaluated`;
 
   const overallPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
   document.getElementById('overallPctDisplay').textContent = `${overallPct}%`;
