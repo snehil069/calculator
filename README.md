@@ -11,7 +11,7 @@ A modern, aesthetic, component-aware SGPA calculator designed specifically for *
 ## ✨ Features
 
 - **⚡ Component-Aware Dynamic Evaluation:**
-  Unlike traditional calculators that penalize pending exams with a 0 and drag your SGPA down, this calculator dynamically computes your standing based **strictly on the exams and components you have completed so far** (e.g. CI-1, CI-2, Practicals) without penalizing future exams like End Sem.
+  Unlike traditional calculators that penalize pending exams with a 0 and drag your SGPA down, this calculator dynamically computes your standing based **strictly on the exams and components you have completed so far** (e.g. CIE-1, CIE-2, Practicals) without penalizing future exams like End Sem.
 - **🎨 Modern Aesthetic UI:**
   Built with a sleek design system, dark/light theme switcher, gradient accents, fluid micro-interactions, responsive card layouts, and progress bars.
 - **🎯 Semester Target Forecaster:**
@@ -31,9 +31,9 @@ A modern, aesthetic, component-aware SGPA calculator designed specifically for *
 
 ### 4-Credit Subjects (100 Theory + 25 Practical)
 - **Theory (3 Credits weight, 100 Marks total):**
-  - CI-1: 20 Marks
-  - CI-2: 20 Marks
-  - CI-3: 10 Marks
+  - CIE-1: 20 Marks
+  - CIE-2: 20 Marks
+  - CIE-3: 10 Marks
   - End Sem: 50 Marks
 - **Practical (1 Credit weight, 25 Marks total):**
   - Practical exam / submission: 25 Marks
@@ -50,9 +50,9 @@ A modern, aesthetic, component-aware SGPA calculator designed specifically for *
 ### 2-Credit Subjects
 | Subject | Evaluation Scheme | Total Marks | Credits |
 | :--- | :--- | :---: | :---: |
-| **IKS (Indian Knowledge Systems)** | CI-1 (20) + CI-2 (20) + CI-3 (10) | 50 | 2 |
+| **IKS (Indian Knowledge Systems)** | CIE-1 (20) + CIE-2 (20) + CIE-3 (10) | 50 | 2 |
 | **DTI (Design Thinking & Innovation)** | PPT 1 (10) + PPT 2 (10) + Quiz (10) + Project (20) + Practical (25) | 75 | 2 |
-| **CHSV (Constitution, Ethics & Human Values)** | CI-1 (20) + CI-2 (20) + CI-3 (10) + Homework (25) | 75 | 2 |
+| **CHSV (Constitution, Ethics & Human Values)** | CIE-1 (20) + CIE-2 (20) + CIE-3 (10) + Homework (25) | 75 | 2 |
 
 ---
 
