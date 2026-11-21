@@ -912,11 +912,11 @@ function showToast(text) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// Core Calculation Logic
+// Core Calculation Logic (Official SPPU 4-Step Pipeline)
 function calculate() {
   const cards = document.querySelectorAll('.subject-card');
 
-  let totalWeightedGP = 0;
+  let totalCreditPoints = 0;
   let evaluatedCredits = 0;
   const totalSemCredits = 22;
 
@@ -929,31 +929,33 @@ function calculate() {
 
   cards.forEach(card => {
     const code = card.dataset.code;
-    const type = card.dataset.type;
     const credits = parseFloat(card.dataset.credits) || 0;
     const inputs = Array.from(card.querySelectorAll('.m-input'));
     totalFieldsCount += inputs.length;
 
+    let marksObtained = 0;
+    let maxMarks = 0;
     let filledCount = 0;
-    let scoredSum = 0;
-    let evaluatedMax = 0;
 
-    if (type === 'four') {
-      let theoryScored = 0;
-      let theoryMax = 0;
-      let practicalScored = 0;
-      let practicalMax = 0;
+    let theoryScored = 0;
+    let theoryMax = 0;
+    let practicalScored = 0;
+    let practicalMax = 0;
 
-      inputs.forEach(input => {
-        const max = parseFloat(input.dataset.max) || 0;
-        const group = input.dataset.group;
-        const raw = input.value.trim();
+    inputs.forEach(input => {
+      const max = parseFloat(input.dataset.max) || 0;
+      const group = input.dataset.group;
+      const raw = input.value.trim();
 
-        if (raw !== '') {
-          const val = parseFloat(raw) || 0;
+      if (raw !== '') {
+        const val = parseFloat(raw);
+        if (!isNaN(val)) {
           filledCount++;
           totalFieldsFilled++;
           input.classList.add('has-val');
+
+          marksObtained += val;
+          maxMarks += max;
 
           if (group === 'theory') {
             theoryScored += val;
@@ -962,121 +964,78 @@ function calculate() {
             practicalScored += val;
             practicalMax += max;
           }
-        } else {
-          input.classList.remove('has-val');
         }
-      });
-
-      scoredSum = theoryScored + practicalScored;
-      evaluatedMax = theoryMax + practicalMax;
-
-      let subjectGP = 0;
-      let subjectPct = 0;
-
-      if (filledCount > 0) {
-        activeCourses++;
-        totalMarksScored += scoredSum;
-        totalMarksEvaluated += evaluatedMax;
-
-        const hasTheory = theoryMax > 0;
-        const hasPractical = practicalMax > 0;
-
-        let theoryPct = hasTheory ? (theoryScored / theoryMax) * 100 : 0;
-        let practicalPct = hasPractical ? (practicalScored / practicalMax) * 100 : 0;
-
-        let theoryGP = hasTheory ? getGradePoint(theoryPct) : 0;
-        let practicalGP = hasPractical ? getGradePoint(practicalPct) : 0;
-
-        let subjectCredits = 0;
-        let subjectCreditPoints = 0;
-
-        // Weighting: Theory = 3 credits, Practical = 1 credit
-        if (hasTheory && hasPractical) {
-          subjectCreditPoints = (theoryGP * 3) + (practicalGP * 1);
-          subjectCredits = 4;
-        } else if (hasTheory) {
-          subjectCreditPoints = (theoryGP * 3);
-          subjectCredits = 3;
-        } else if (hasPractical) {
-          subjectCreditPoints = (practicalGP * 1);
-          subjectCredits = 1;
-        }
-
-        subjectGP = subjectCredits > 0 ? (subjectCreditPoints / subjectCredits) : 0;
-        subjectPct = (scoredSum / evaluatedMax) * 100;
-
-        totalWeightedGP += subjectCreditPoints;
-        evaluatedCredits += subjectCredits;
+      } else {
+        input.classList.remove('has-val');
       }
+    });
 
-      // Display percentage for this subject
-      document.getElementById(`${code}-pct`).textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
-      document.getElementById(`${code}-raw`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} marks` : '0 / 0 marks';
+    let subjectPct = 0;
+    let gradePoint = 0;
 
-      document.getElementById(`${code}-theory-sub`).textContent = theoryMax > 0 
-        ? `${theoryScored} / ${theoryMax} (${theoryPct.toFixed(0)}% → ${theoryGP} GP)` 
-        : '--';
-      document.getElementById(`${code}-practical-sub`).textContent = practicalMax > 0 
-        ? `${practicalScored} / ${practicalMax} (${practicalPct.toFixed(0)}% → ${practicalGP} GP)` 
-        : '--';
-      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / 5 fields`;
+    if (filledCount > 0 && maxMarks > 0) {
+      activeCourses++;
+      totalMarksScored += marksObtained;
+      totalMarksEvaluated += maxMarks;
 
+      // 1. Normalize to subject percentage
+      subjectPct = (marksObtained / maxMarks) * 100;
+
+      // 2. Map to SPPU Grade Point
+      gradePoint = getGradePoint(subjectPct);
+
+      // 3. Weight by subject credits to get Credit Points
+      const creditPoints = credits * gradePoint;
+      totalCreditPoints += creditPoints;
+      evaluatedCredits += credits;
+    }
+
+    // Update Subject UI
+    const pctEl = document.getElementById(`${code}-pct`);
+    if (pctEl) {
+      pctEl.textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
+    }
+    const rawEl = document.getElementById(`${code}-raw`);
+    if (rawEl) {
+      rawEl.textContent = filledCount > 0 ? `${marksObtained} / ${maxMarks} marks` : '0 / 0 marks';
+    }
+
+    if (card.dataset.type === 'four') {
+      const thEl = document.getElementById(`${code}-theory-sub`);
+      if (thEl) {
+        thEl.textContent = theoryMax > 0 ? `${theoryScored} / ${theoryMax}` : '--';
+      }
+      const prEl = document.getElementById(`${code}-practical-sub`);
+      if (prEl) {
+        prEl.textContent = practicalMax > 0 ? `${practicalScored} / ${practicalMax}` : '--';
+      }
+      const fEl = document.getElementById(`${code}-fields-sub`);
+      if (fEl) {
+        fEl.textContent = filledCount > 0 
+          ? `${filledCount}/5 fields (Grade: ${getGradeLetter(gradePoint)} · ${gradePoint} GP)`
+          : '0 / 5 fields';
+      }
     } else {
-      // 2-Credit Subjects (IKS: 50, DTI: 75, CHSV: 75)
-      inputs.forEach(input => {
-        const max = parseFloat(input.dataset.max) || 0;
-        const raw = input.value.trim();
-
-        if (raw !== '') {
-          const val = parseFloat(raw) || 0;
-          filledCount++;
-          totalFieldsFilled++;
-          input.classList.add('has-val');
-
-          scoredSum += val;
-          evaluatedMax += max;
-        } else {
-          input.classList.remove('has-val');
-        }
-      });
-
-      let subjectGP = 0;
-      let subjectPct = 0;
-
-      if (filledCount > 0) {
-        activeCourses++;
-        totalMarksScored += scoredSum;
-        totalMarksEvaluated += evaluatedMax;
-
-        subjectPct = (scoredSum / evaluatedMax) * 100;
-        subjectGP = getGradePoint(subjectPct);
-        const subjectCreditPoints = subjectGP * 2;
-        const subjectCredits = 2;
-
-        totalWeightedGP += subjectCreditPoints;
-        evaluatedCredits += subjectCredits;
+      const subScoreEl = document.getElementById(`${code}-sub-score`);
+      if (subScoreEl) {
+        subScoreEl.textContent = filledCount > 0 
+          ? `${marksObtained} / ${maxMarks} → Grade: ${getGradeLetter(gradePoint)} (${gradePoint} GP)` 
+          : '0 / 0';
       }
-
-      // Display percentage for this subject
-      document.getElementById(`${code}-pct`).textContent = filledCount > 0 ? `${subjectPct.toFixed(1)}%` : '--%';
-      document.getElementById(`${code}-raw`).textContent = filledCount > 0 ? `${scoredSum} / ${evaluatedMax} marks` : '0 / 0 marks';
-      document.getElementById(`${code}-sub-score`).textContent = filledCount > 0 
-        ? `${scoredSum} / ${evaluatedMax} (${subjectPct.toFixed(1)}% → ${subjectGP} GP · ${getGradeLetter(subjectGP)})` 
-        : '0 / 0';
-      document.getElementById(`${code}-fields-sub`).textContent = `${filledCount} / ${inputs.length} fields`;
+      const fEl = document.getElementById(`${code}-fields-sub`);
+      if (fEl) {
+        fEl.textContent = `${filledCount} / ${inputs.length} fields`;
+      }
     }
   });
 
-  // Calculate Overall Semester SGPA (Total Credit Points / Total Credits)
-  let semSGPA = 0;
-  if (evaluatedCredits > 0) {
-    semSGPA = totalWeightedGP / evaluatedCredits;
-  }
+  // Calculate Final SGPA
+  const semSGPA = evaluatedCredits > 0 ? (totalCreditPoints / evaluatedCredits) : 0;
 
   // Update Top Dashboard
   document.getElementById('sgpaDisplay').textContent = semSGPA.toFixed(2);
   document.getElementById('evaluatedCreditsText').textContent = evaluatedCredits > 0
-    ? `${totalWeightedGP.toFixed(1)} Credit Points · ${evaluatedCredits} / ${totalSemCredits} Credits`
+    ? `${totalCreditPoints} Credit Points · ${evaluatedCredits} / ${totalSemCredits} Credits`
     : `0 / ${totalSemCredits} Credits Evaluated`;
 
   const overallPct = totalMarksEvaluated > 0 ? ((totalMarksScored / totalMarksEvaluated) * 100).toFixed(1) : '0.0';
@@ -1085,7 +1044,6 @@ function calculate() {
   document.getElementById('activeCoursesDisplay').textContent = `${activeCourses} / 7`;
   document.getElementById('fieldsDoneSub').textContent = `${totalFieldsFilled} of ${totalFieldsCount} fields logged`;
 
-  // Auto-save
   saveData();
 }
 
@@ -1131,19 +1089,19 @@ function resetCalculator() {
 // Load realistic sample
 function fillSample() {
   const demo = [
-    // Maths: CIE1=18, CIE2=19, CIE3=9, EndSem=38, Practical=21 (10 GP)
+    // Maths: CIE1=18, CIE2=19, CIE3=9, EndSem=38, Practical=21 (105/125 = 84% -> 10 GP)
     '18', '19', '9', '38', '21',
-    // PST: CIE1=16, CIE2=17, CIE3=7, EndSem=34, Practical=19 (9 GP)
+    // PST: CIE1=16, CIE2=17, CIE3=7, EndSem=34, Practical=19 (93/125 = 74.4% -> 9 GP)
     '16', '17', '7', '34', '19',
-    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=40, Practical=22 (10 GP)
+    // Chemistry: CIE1=18, CIE2=17, CIE3=9, EndSem=40, Practical=22 (106/125 = 84.8% -> 10 GP)
     '18', '17', '9', '40', '22',
-    // BMAC: CIE1=14, CIE2=15, CIE3=7, EndSem=31, Practical=18 (Theory 8 GP, Pract 9 GP)
+    // BMAC: CIE1=14, CIE2=15, CIE3=7, EndSem=31, Practical=18 (85/125 = 68% -> 8 GP)
     '14', '15', '7', '31', '18',
-    // IKS: CIE1=17, CIE2=18, CIE3=8 (10 GP)
+    // IKS: CIE1=17, CIE2=18, CIE3=8 (43/50 = 86% -> 10 GP)
     '17', '18', '8',
-    // DTI: PPT1=8, PPT2=8, Quiz=8, Project=15, Practical=19 (9 GP)
+    // DTI: PPT1=8, PPT2=8, Quiz=8, Project=15, Practical=19 (58/75 = 77.3% -> 9 GP)
     '8', '8', '8', '15', '19',
-    // CHSV: CIE1=15, CIE2=14, CIE3=7, Homework=18 (9 GP)
+    // CHSV: CIE1=15, CIE2=14, CIE3=7, Homework=18 (54/75 = 72% -> 9 GP)
     '15', '14', '7', '18'
   ];
 
@@ -1152,7 +1110,7 @@ function fillSample() {
     input.value = demo[i] || '';
   });
   calculate();
-  showToast('Realistic SPPU sample marks loaded');
+  showToast('Sample marks loaded');
 }
 
 // Initialize and attach non-wheel listeners
@@ -1160,34 +1118,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputs = document.querySelectorAll('.m-input');
 
   inputs.forEach(input => {
-    // 1. COMPLETELY DISABLE MOUSE WHEEL SCROLLING ON NUMBER INPUTS
+    // 1. Prevent mouse scroll wheel from changing numbers inside textbox
     input.addEventListener('wheel', function(e) {
       e.preventDefault();
-      // Unfocus input if user is scrolling the page so scroll passes naturally
-      this.blur();
     }, { passive: false });
 
-    // 2. ONLY KEYBOARD INPUT WITH VALUE CLAMPING
+    // 2. Immediate keyboard input calculation
     input.addEventListener('input', function() {
       const max = parseFloat(this.dataset.max) || 100;
-      const val = parseFloat(this.value);
-
-      if (val > max) {
-        this.value = max;
-        showToast(`Max marks is ${max}`);
-      } else if (val < 0) {
-        this.value = 0;
+      if (this.value !== '') {
+        const val = parseFloat(this.value);
+        if (!isNaN(val)) {
+          if (val > max) {
+            this.value = max;
+            showToast(`Max marks is ${max}`);
+          } else if (val < 0) {
+            this.value = 0;
+          }
+        }
       }
       calculate();
     });
   });
-
-  // Global listener to prevent accidental number increment on page scroll
-  window.addEventListener('wheel', function(e) {
-    if (document.activeElement && document.activeElement.type === 'number') {
-      document.activeElement.blur();
-    }
-  }, { passive: true });
 
   loadData();
 });
