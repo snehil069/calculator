@@ -530,10 +530,54 @@ header.page-header {
   transform: translateY(0);
 }
 
+/* Creator Attribution Box (Fixed Bottom Left) */
+.creator-badge {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 990;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffffff;
+  border: 1px solid var(--border-hairline);
+  padding: 8px 14px;
+  border-radius: var(--radius-cards);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-charcoal-navy);
+  user-select: none;
+  pointer-events: auto;
+}
+
+.creator-badge .creator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-deep-teal);
+  display: inline-block;
+}
+
+.creator-badge strong {
+  font-weight: 700;
+  color: var(--color-deep-teal);
+}
+
 @media print {
-  .header-actions, .toast { display: none !important; }
+  .header-actions, .toast, .creator-badge { display: none !important; }
   body { background: #fff !important; padding: 0 !important; }
   .subject-card { break-inside: avoid; border: 1px solid #ccc !important; }
+}
+
+@media (max-width: 600px) {
+  .creator-badge {
+    bottom: 12px;
+    left: 12px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
 }
 </style>
 </head>
@@ -997,6 +1041,12 @@ header.page-header {
 
 <!-- Minimal Toast -->
 <div class="toast" id="toast">Marks updated</div>
+
+<!-- Creator Attribution Badge Box (Bottom Left) -->
+<div class="creator-badge" id="creatorBadge">
+  <span class="creator-dot"></span>
+  <span>Created by <strong>Madhav</strong></span>
+</div>
 
 <script>
 // Calculation Mode: 'split' = 3 Theory + 1 Practical Weighting (Official), 'combined' = Combined 125M Unified
