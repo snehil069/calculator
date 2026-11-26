@@ -10,7 +10,167 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- Instant lockdown check (hides site till 28/11/2026 23:59:59 IST) -->
+<script>
+  (function() {
+    // Lockdown until 28/11/2026 end of day (IST)
+    window.LOCK_UNTIL = new Date('2026-11-28T23:59:59+05:30');
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var isBypass = params.get('bypass') === '1' || params.get('unlock') === '1' || sessionStorage.getItem('site_bypass') === '1';
+      if (isBypass) {
+        sessionStorage.setItem('site_bypass', '1');
+        return;
+      }
+      if (new Date() <= window.LOCK_UNTIL) {
+        document.documentElement.classList.add('lockdown-active');
+      }
+    } catch(e) {}
+  })();
+</script>
+
 <style>
+/* ==========================================================================
+   Temporary Lockdown Styles (Active till 28/11/2026)
+   ========================================================================== */
+html.lockdown-active body {
+  background: #0b0f19 !important;
+  background-image: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+html.lockdown-active body > *:not(#lockdown-screen):not(#creatorBadge) {
+  display: none !important;
+}
+
+html.lockdown-active .creator-badge {
+  display: inline-flex !important;
+  z-index: 100000000 !important;
+  background-color: rgba(17, 24, 39, 0.82) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #cbd5e1 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.lockdown-active .creator-badge .creator-dot {
+  background-color: #38bdf8 !important;
+  box-shadow: 0 0 8px #38bdf8 !important;
+}
+
+html.lockdown-active .creator-badge strong {
+  color: #38bdf8 !important;
+}
+
+#lockdown-screen {
+  display: none;
+}
+
+html.lockdown-active #lockdown-screen {
+  display: flex !important;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999999;
+  background: #0b0f19;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.lockdown-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 460px;
+  width: 100%;
+}
+
+.lockdown-img-wrapper {
+  position: relative;
+  max-width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  background: #111827;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lockdown-img-wrapper:active {
+  transform: scale(0.97);
+}
+
+.lockdown-img {
+  display: block;
+  max-width: 100%;
+  max-height: 68vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.lockdown-footer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lockdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.lockdown-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: lockdown-pulse 1.6s infinite;
+}
+
+.lockdown-timer {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.lockdown-hint {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+@keyframes lockdown-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
+}
 /* ==========================================================================
    Design Tokens — Minimal Warm Paper & Deep Teal
    ========================================================================== */
@@ -583,6 +743,22 @@ header.page-header {
 </head>
 <body>
 
+<!-- Temporary Lockdown Screen (Locked till 28/11/2026 23:59:59 IST) -->
+<div id="lockdown-screen" aria-live="polite">
+  <div class="lockdown-card">
+    <div class="lockdown-img-wrapper" id="lockdownImgWrap" title="Click 5 times for secret bypass">
+      <img src="padhle.jpg" alt="Padhle bsdk" class="lockdown-img" />
+    </div>
+    <div class="lockdown-footer">
+      <div class="lockdown-pill">
+        <span class="lockdown-pill-dot"></span>
+        <span>Unlocks in <span class="lockdown-timer" id="lockdownCountdown">calculating...</span></span>
+      </div>
+      <div class="lockdown-hint">Locked until 28/11/2026 11:59 PM IST</div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
 
   <!-- Header -->
@@ -1045,7 +1221,7 @@ header.page-header {
 <!-- Creator Attribution Badge Box (Bottom Left) -->
 <div class="creator-badge" id="creatorBadge">
   <span class="creator-dot"></span>
-  <span>Created by <strong>Madhav</strong></span>
+  <span>Engineered by <strong>Madhav</strong></span>
 </div>
 
 <script>
@@ -1593,6 +1769,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadData();
 });
+
+// Lockdown Countdown & Unlock Engine (Active till 28/11/2026 23:59:59 IST)
+(function initLockdownLogic() {
+  const LOCK_UNTIL = window.LOCK_UNTIL || new Date('2026-11-28T23:59:59+05:30');
+  const countdownEl = document.getElementById('lockdownCountdown');
+  const screenEl = document.getElementById('lockdown-screen');
+  const imgWrap = document.getElementById('lockdownImgWrap');
+
+  function updateLockStatus() {
+    if (sessionStorage.getItem('site_bypass') === '1') {
+      document.documentElement.classList.remove('lockdown-active');
+      if (screenEl) screenEl.style.display = 'none';
+      return true;
+    }
+
+    const now = new Date();
+    const diff = LOCK_UNTIL - now;
+
+    if (diff <= 0) {
+      document.documentElement.classList.remove('lockdown-active');
+      if (screenEl) screenEl.style.display = 'none';
+      return true;
+    }
+
+    if (countdownEl) {
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      let text = '';
+      if (days > 0) text += days + 'd ';
+      text += String(hours).padStart(2, '0') + 'h ';
+      text += String(mins).padStart(2, '0') + 'm ';
+      text += String(secs).padStart(2, '0') + 's';
+      countdownEl.textContent = text;
+    }
+    return false;
+  }
+
+  const isUnlocked = updateLockStatus();
+  if (!isUnlocked) {
+    const timer = setInterval(() => {
+      if (updateLockStatus()) clearInterval(timer);
+    }, 1000);
+
+    // Secret bypass: click meme 5 times rapidly
+    let clicks = 0;
+    let resetTimer = null;
+    if (imgWrap) {
+      imgWrap.addEventListener('click', () => {
+        clicks++;
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { clicks = 0; }, 1500);
+        if (clicks >= 5) {
+          sessionStorage.setItem('site_bypass', '1');
+          document.documentElement.classList.remove('lockdown-active');
+          if (screenEl) screenEl.style.display = 'none';
+          if (typeof showToast === 'function') {
+            showToast('🔓 Secret bypass unlocked!');
+          }
+        }
+      });
+    }
+  }
+})();
 </script>
 
 </body>
