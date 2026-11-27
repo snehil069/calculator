@@ -746,7 +746,7 @@ header.page-header {
 <!-- Temporary Lockdown Screen (Locked till 29/11/2026 23:59:59 IST) -->
 <div id="lockdown-screen" aria-live="polite">
   <div class="lockdown-card">
-    <div class="lockdown-img-wrapper" id="lockdownImgWrap" title="Click 5 times for secret bypass">
+    <div class="lockdown-img-wrapper" id="lockdownImgWrap">
       <img src="padhle.jpg" alt="Padhle bsdk" class="lockdown-img" />
     </div>
     <div class="lockdown-footer">
@@ -1815,21 +1815,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (updateLockStatus()) clearInterval(timer);
     }, 1000);
 
-    // Secret bypass: click meme 5 times rapidly
+    // Secret bypass: click meme 5 times rapidly to prompt for password
     let clicks = 0;
     let resetTimer = null;
     if (imgWrap) {
       imgWrap.addEventListener('click', () => {
         clicks++;
         clearTimeout(resetTimer);
-        resetTimer = setTimeout(() => { clicks = 0; }, 1500);
+        resetTimer = setTimeout(() => { clicks = 0; }, 1800);
         if (clicks >= 5) {
-          sessionStorage.setItem('site_bypass', '1');
-          document.documentElement.classList.remove('lockdown-active');
-          if (screenEl) screenEl.style.display = 'none';
-          if (typeof showToast === 'function') {
-            showToast('🔓 Secret bypass unlocked!');
-          }
+          clicks = 0;
+          setTimeout(() => {
+            const pwd = prompt('Enter password to unlock:');
+            if (pwd && pwd.trim().toLowerCase() === 'padhle bsdk') {
+              sessionStorage.setItem('site_bypass', '1');
+              document.documentElement.classList.remove('lockdown-active');
+              if (screenEl) screenEl.style.display = 'none';
+              if (typeof showToast === 'function') {
+                showToast('🔓 Unlocked successfully!');
+              }
+            } else if (pwd !== null) {
+              alert('Incorrect password! Padhle bsdk!');
+            }
+          }, 50);
         }
       });
     }
