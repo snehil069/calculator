@@ -16,10 +16,10 @@
     // Lockdown until 29/11/2026 end of day (IST)
     window.LOCK_UNTIL = new Date('2026-11-29T23:59:59+05:30');
     try {
+      sessionStorage.removeItem('site_bypass');
       var params = new URLSearchParams(window.location.search);
-      var isBypass = params.get('bypass') === '1' || params.get('unlock') === '1' || sessionStorage.getItem('site_bypass') === '1';
+      var isBypass = params.get('bypass') === '1' || params.get('unlock') === '1';
       if (isBypass) {
-        sessionStorage.setItem('site_bypass', '1');
         return;
       }
       if (new Date() <= window.LOCK_UNTIL) {
@@ -1776,9 +1776,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const countdownEl = document.getElementById('lockdownCountdown');
   const screenEl = document.getElementById('lockdown-screen');
   const imgWrap = document.getElementById('lockdownImgWrap');
+  let memoryUnlocked = false;
 
   function updateLockStatus() {
-    if (sessionStorage.getItem('site_bypass') === '1') {
+    if (memoryUnlocked) {
       document.documentElement.classList.remove('lockdown-active');
       if (screenEl) screenEl.style.display = 'none';
       return true;
@@ -1828,7 +1829,7 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => {
             const pwd = prompt('Enter password to unlock:');
             if (pwd && pwd.trim().toLowerCase() === 'padhle bsdk') {
-              sessionStorage.setItem('site_bypass', '1');
+              memoryUnlocked = true;
               document.documentElement.classList.remove('lockdown-active');
               if (screenEl) screenEl.style.display = 'none';
               if (typeof showToast === 'function') {
